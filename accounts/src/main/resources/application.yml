@@ -1,0 +1,23 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: accounts-service            # Имя сервиса в реестре Consul
+
+  cloud:
+    consul:
+      host: localhost           # Адрес Consul-агента (по умолчанию localhost)
+      port: 8500                # Порт Consul-агента (по умолчанию 8500)
+      config:
+        enabled: false
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/practicum
+    username: ${DB_USER}
+    password: ${DB_PASS}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.PostgreSQLDialect

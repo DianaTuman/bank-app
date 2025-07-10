@@ -1,0 +1,13 @@
+server:
+  port: 8086
+
+spring:
+  application:
+    name: notifications-service            # Имя сервиса в реестре Consul
+
+  cloud:
+    consul:
+      host: localhost           # Адрес Consul-агента (по умолчанию localhost)
+      port: 8500                # Порт Consul-агента (по умолчанию 8500)
+      config:
+        enabled: false

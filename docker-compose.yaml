@@ -1,0 +1,55 @@
+services:
+  web-ui:
+    build:
+      context: ./web-ui
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db-postgres
+      - payment-app
+      - cache-redis
+    environment:
+      - 'SPRING_R2DBC_URL=r2dbc:postgresql://db-postgres:5432/postgres'
+      - 'SPRING_R2DBC_USERNAME=compose-postgres'
+      - 'SPRING_R2DBC_PASSWORD=compose-postgres'
+      - 'SPRING_DATA_REDIS_HOST=cache-redis'
+      - 'PAYMENT_SERVICE=http://payment-app:8081'
+      - 'SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_TOKEN_URI=http://keycloak:8080/realms/master/protocol/openid-connect/token'
+      - 'SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_JWk_SET_URI=http://keycloak:8080/realms/master/protocol/openid-connect/certs'
+      - 'SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_USER_INFO_URI=http://keycloak:8080/realms/master/protocol/openid-connect/userinfo'
+      - 'SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_AUTHORIZATION_URI=http://keycloak:8080/realms/master/protocol/openid-connect/auth'
+
+  payment-app:
+    build:
+      context: ./payment-app
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+    environment:
+      - 'SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI=http://keycloak:8080/realms/master'
+
+  db-postgres:
+    image: 'postgres:17'
+    restart: always
+    environment:
+      - POSTGRES_USER=compose-postgres
+      - POSTGRES_PASSWORD=compose-postgres
+
+  keycloak:
+    image: 'quay.io/keycloak/keycloak:26.2.5'
+    ports:
+      - "8082:8080"
+    command:
+      - start-dev
+      - --import-realm
+    volumes:
+      - ./keycloak/:/opt/keycloak/data/import/
+    environment:
+      - KC_BOOTSTRAP_ADMIN_USERNAME=admin
+      - KC_BOOTSTRAP_ADMIN_PASSWORD=admin
+
+  consul:
+    image: 'hashicorp/consul:1.21'
+    ports:
+      - "8500:8500"
