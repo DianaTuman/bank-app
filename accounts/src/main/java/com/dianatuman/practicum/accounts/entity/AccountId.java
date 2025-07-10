@@ -9,11 +9,11 @@ import java.io.Serializable;
 @EqualsAndHashCode
 public class AccountId implements Serializable {
 
-    private User userLogin;
+    private String userLogin;
 
     private String accountCurrency;
 
-    public AccountId(User userLogin, String accountCurrency) {
+    public AccountId(String userLogin, String accountCurrency) {
         this.userLogin = userLogin;
         this.accountCurrency = accountCurrency;
     }

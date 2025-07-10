@@ -41,4 +41,13 @@ public class Account {
     public int hashCode() {
         return Objects.hash(userLogin, accountCurrency);
     }
+
+    public boolean updateValue(Float cashSum) {
+        if (value + cashSum > 0) {
+            value += cashSum;
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

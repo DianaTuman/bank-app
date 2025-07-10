@@ -1,5 +1,6 @@
 package com.dianatuman.practicum.accounts.controller;
 
+import com.dianatuman.practicum.accounts.dto.AccountDTO;
 import com.dianatuman.practicum.accounts.dto.CashDTO;
 import com.dianatuman.practicum.accounts.dto.TransferDTO;
 import com.dianatuman.practicum.accounts.entity.Account;
@@ -20,8 +21,17 @@ public class AccountController {
 
     @GetMapping("/{login}")
     public List<Account> getAllAccountsForUser(@PathVariable String login) {
-        List<Account> allAccounts = accountService.getAllAccounts();
-        return allAccounts;
+        return accountService.getAllAccountsByLogin(login);
+    }
+
+    @PostMapping("/{login}")
+    public boolean createAccount(@RequestBody AccountDTO accountDTO) {
+        return accountService.createAccount(accountDTO);
+    }
+
+    @DeleteMapping("/{login}")
+    public boolean deleteAccount(@RequestBody AccountDTO accountDTO) {
+        return accountService.deleteAccount(accountDTO);
     }
 
     @PostMapping("/cash")

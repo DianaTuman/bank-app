@@ -6,13 +6,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
-public class UserDTO implements UserDetails {
+public class UserPasswordDTO implements UserDetails {
 
     String login;
 
-    String name;
+    String password;
 
-    String
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();
@@ -20,11 +19,11 @@ public class UserDTO implements UserDetails {
 
     @Override
     public String getPassword() {
-        return "";
+        return password;
     }
 
     @Override
     public String getUsername() {
-        return "";
+        return login;
     }
 }

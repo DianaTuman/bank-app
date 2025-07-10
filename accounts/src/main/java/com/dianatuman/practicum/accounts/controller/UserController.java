@@ -1,10 +1,10 @@
 package com.dianatuman.practicum.accounts.controller;
 
+import com.dianatuman.practicum.accounts.dto.UserDTO;
+import com.dianatuman.practicum.accounts.dto.UserPasswordDTO;
 import com.dianatuman.practicum.accounts.entity.User;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.dianatuman.practicum.accounts.service.UserService;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -12,15 +12,29 @@ import java.util.List;
 @RequestMapping("users/{login}")
 public class UserController {
 
+    private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
+
+    @GetMapping
+    public UserPasswordDTO getUser(@PathVariable String login) {
+        return userService.getUserPassword(login);
+    }
+
     @DeleteMapping
-    public void deleteUser() {
+    public void deleteUser(@PathVariable String login) {
+        userService.deleteUser(login);
     }
 
     @PutMapping
-    public void editUser() {
+    public void editUser(@PathVariable UserDTO userDTO) {
+        userService.editUser(userDTO);
     }
 
     @PutMapping("password")
-    public void editPassword() {
+    public void editPassword(@PathVariable UserPasswordDTO userPasswordDTO) {
+        userService.editPassword(userPasswordDTO);
     }
 }

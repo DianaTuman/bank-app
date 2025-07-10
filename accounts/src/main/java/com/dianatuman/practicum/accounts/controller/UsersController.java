@@ -1,5 +1,6 @@
 package com.dianatuman.practicum.accounts.controller;
 
+import com.dianatuman.practicum.accounts.dto.UserDTO;
 import com.dianatuman.practicum.accounts.entity.User;
 import com.dianatuman.practicum.accounts.service.UserService;
 import org.springframework.web.bind.annotation.*;
@@ -17,18 +18,13 @@ public class UsersController {
     }
 
     @GetMapping
-    public List<User> getAllUsers() {
+    public List<UserDTO> getAllUsers() {
         return userService.getAllUsers();
     }
 
     @PostMapping
-    public void createUser() {
-
-    }
-
-    @GetMapping("login")
-    public Boolean getUser() {
-        return false;
+    public void createUser(@RequestBody User user) {
+        userService.createUser(user);
     }
 
 }

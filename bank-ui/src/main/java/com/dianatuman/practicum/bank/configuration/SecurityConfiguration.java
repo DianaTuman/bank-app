@@ -1,6 +1,6 @@
 package com.dianatuman.practicum.bank.configuration;
 
-import com.dianatuman.practicum.bank.dto.UserDTO;
+import com.dianatuman.practicum.bank.dto.UserPasswordDTO;
 import com.dianatuman.practicum.bank.service.AccountsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -53,7 +53,7 @@ public class SecurityConfiguration {
         return authentication -> {
             final String username = authentication.getPrincipal().toString();
             final CharSequence rawPassword = authentication.getCredentials().toString();
-            UserDTO user = accountsService.loadUserByUsername(username);
+            UserPasswordDTO user = accountsService.loadUserByUsername(username);
             if (passwordEncoder().matches(rawPassword, user.getPassword())) {
                 return new UsernamePasswordAuthenticationToken(username, user.getPassword(), user.getAuthorities());
             } else {
