@@ -2,11 +2,8 @@ package com.dianatuman.practicum.accounts.controller;
 
 import com.dianatuman.practicum.accounts.dto.UserDTO;
 import com.dianatuman.practicum.accounts.dto.UserPasswordDTO;
-import com.dianatuman.practicum.accounts.entity.User;
 import com.dianatuman.practicum.accounts.service.UserService;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("users/{login}")

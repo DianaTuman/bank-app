@@ -1,13 +1,22 @@
 package com.dianatuman.practicum.bank.controller;
 
+import com.dianatuman.practicum.bank.service.CashService;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController("/user")
+@RestController("/user/{login}")
 public class UserController {
 
+    private final CashService cashService;
+
+    public UserController(CashService cashService) {
+        this.cashService = cashService;
+    }
+
     //only login == principal
-    @PostMapping("/{login}/editPassword")
+    @PostMapping("/editPassword")
     public String editPassword() {
         // POST "/user/{login}/editPassword" - эндпоинт смены пароля (записывает список ошибок, если есть, в passwordErrors)
         //        	Параметры:
@@ -19,7 +28,7 @@ public class UserController {
         return "redirect:./main";
     }
 
-    @PostMapping("/{login}/editUserAccounts")
+    @PostMapping("/editUserAccounts")
     public String editUserAccounts() {
         //Параметры:
         //        		login - логин пользователя
@@ -31,20 +40,24 @@ public class UserController {
         return "redirect:./main";
     }
 
-    @PostMapping("/{login}/cash")
-    public String cash() {
+    @PostMapping("/cash")
+    public String cash(@PathVariable String login, @RequestParam Float value,
+                       @RequestParam String action, @RequestParam String currency) {
+        boolean cash = cashService.cash(login, currency, action, value);
         //        	Параметры:
-        //        		login - логин пользователя
-        //        		currency - строка с валютой
-        //        		value - сумма внесения/снятия
-        //        		action - действие (enum PUT иди GET)
-        //        	Возвращает:
-        //        		редирект на "/main"
-        return "redirect:./main";
+            //        		login - логин пользователя
+            //        		currency - строка с валютой
+            //        		value - сумма внесения/снятия
+            //        		action - действие (enum PUT иди GET)
+            //        	Возвращает:
+            //        		редирект на "/main"
+            return "redirect:./main";
     }
 
-    @PostMapping("/{login}/transfer")
-    public String transfer() {
+    @PostMapping("/transfer")
+    public String transfer(@PathVariable String login, @RequestParam String from_currency,
+                           @RequestParam Float value,
+                           @RequestParam String to_login, @RequestParam String to_currency) {
         //        	Параметры:
         //        		login - логин пользователя
         //        		from_currency - строка с валютой счета, с которого переводятся деньги

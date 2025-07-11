@@ -21,6 +21,7 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationCo
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
+
     @Autowired
     private AccountsService accountsService;
 
