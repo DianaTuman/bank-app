@@ -13,9 +13,15 @@ public interface AccountMapper {
 
     Account toAccount(AccountDTO accountDTO);
 
+    AccountDTO toDTO(Account account);
+
     default User mapFromLogin(String login) {
         User user = new User();
         user.setLogin(login);
         return user;
+    }
+
+    default String mapFromUser(User user) {
+        return user.getLogin();
     }
 }

@@ -1,11 +1,9 @@
 package com.dianatuman.practicum.accounts.dto;
 
-import com.dianatuman.practicum.accounts.entity.Account;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Data
@@ -16,9 +14,7 @@ public class UserDTO {
 
     private String name;
 
-    private String email;
+    private Long birthdate;
 
-    private Date birthdate;
-
-    private List<Account> accounts = new ArrayList<>();
+    private List<AccountDTO> accounts = new ArrayList<>();
 }

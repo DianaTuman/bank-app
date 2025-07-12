@@ -2,12 +2,13 @@ package com.dianatuman.practicum.bank.controller;
 
 import com.dianatuman.practicum.bank.service.CashService;
 import com.dianatuman.practicum.bank.service.TransferService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
-@RestController("/user/{login}")
+@Controller("/user/{login}")
 public class UserController {
 
     private final CashService cashService;
@@ -46,30 +47,15 @@ public class UserController {
 
     @PostMapping("/cash")
     public String cash(@PathVariable String login, @RequestParam Float value,
-                       @RequestParam String action, @RequestParam String currency) {
+                       @RequestParam String action, @RequestParam String currency) throws JsonProcessingException {
         boolean cash = cashService.cash(login, currency, action, value);
-        //        	Параметры:
-        //        		login - логин пользователя
-        //        		currency - строка с валютой
-        //        		value - сумма внесения/снятия
-        //        		action - действие (enum PUT иди GET)
-        //        	Возвращает:
-        //        		редирект на "/main"
         return "redirect:./main";
     }
 
     @PostMapping("/transfer")
     public String transfer(@PathVariable String login, @RequestParam String from_currency,
                            @RequestParam Float value,
-                           @RequestParam String to_login, @RequestParam String to_currency) {
-        //        	Параметры:
-        //        		login - логин пользователя
-        //        		from_currency - строка с валютой счета, с которого переводятся деньги
-        //        		to_currency - строка с валютой счета, на который переводятся деньги
-        //        		value - сумма внесения/снятия
-        //        		to_login - логин пользователя, которому переводятся деньги
-        //        	Возвращает:
-        //        		редирект на "/main"
+                           @RequestParam String to_login, @RequestParam String to_currency) throws JsonProcessingException {
         boolean transfer = transferService.transfer(login, from_currency, value, to_login, to_currency);
         return "redirect:./main";
     }

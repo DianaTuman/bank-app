@@ -20,6 +20,11 @@ public class UserController {
         return userService.getUserPassword(login);
     }
 
+    @GetMapping("info")
+    public UserDTO getUserInfo(@PathVariable String login) {
+        return userService.getUser(login);
+    }
+
     @DeleteMapping
     public void deleteUser(@PathVariable String login) {
         userService.deleteUser(login);

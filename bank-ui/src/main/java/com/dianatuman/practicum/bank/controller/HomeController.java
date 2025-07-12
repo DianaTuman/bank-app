@@ -1,11 +1,21 @@
 package com.dianatuman.practicum.bank.controller;
 
+import com.dianatuman.practicum.bank.dto.UserDTO;
+import com.dianatuman.practicum.bank.service.AccountsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.security.Principal;
+
 @Controller("/")
 public class HomeController {
+
+    private final AccountsService accountsService;
+
+    public HomeController(AccountsService accountsService) {
+        this.accountsService = accountsService;
+    }
 
     @GetMapping
     public String homePage() {
@@ -13,27 +23,17 @@ public class HomeController {
     }
 
     @GetMapping("/main")
-    public String mainPage(Model model) {
+    public String mainPage(Model model, Principal principal) {
+        UserDTO userDTO = accountsService.getUserByName(principal.getName());
+        model.addAttribute("login", userDTO.getLogin());
+        model.addAttribute("name", userDTO.getName());
+        model.addAttribute("birthdate", userDTO.getBirthdate());
+        model.addAttribute("accounts", userDTO.getAccounts());
+        model.addAttribute("users", accountsService.getAllUsers());
 
-//        model.addAttribute("user", );
-
-        //             		шаблон "main.html"
-        //            		используется модель для заполнения шаблона:
-        //            			"login" - строка с логином пользователя
-        //            			"name" - строка с фамилией и именем пользователя
-        //            			"birthdate" - LocalDate с датой рождения пользователя
-        //            			"accounts" - список всех зарегистрированных пользователей:
-        //            				"currency" - enum валюта:
-        //            					"title" - название валюты
-        //            					"name()" - код валюты
-        //            				"value" - сумма на счету пользователя в этой валюте
-        //            				"exists" - true, если у пользователя есть счет в этой валюте, false, если нет
         //            			"currency" - список всех доступных валют:
         //            				"title" - название валюты
         //            				"name()" - код валюты
-        //            			"users" - список всех пользователей:
-        //            				"login" - логин пользователя
-        //            				"name" - фамилия и имя пользователя
         //            			"passwordErrors" - список ошибок при смене пароля (null, если не выполнялась смена пароля)
         //            			"userAccountsErrors" - список ошибок при редактировании настроек аккаунта (null, если не выполнялось редактирование)
         //            			"cashErrors" - список ошибок при внесении/снятии денег (null, если не выполнялось внесение/снятие)

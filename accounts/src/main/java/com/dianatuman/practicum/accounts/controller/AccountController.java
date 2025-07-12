@@ -3,11 +3,9 @@ package com.dianatuman.practicum.accounts.controller;
 import com.dianatuman.practicum.accounts.dto.AccountDTO;
 import com.dianatuman.practicum.accounts.dto.CashDTO;
 import com.dianatuman.practicum.accounts.dto.TransferDTO;
-import com.dianatuman.practicum.accounts.entity.Account;
+import com.dianatuman.practicum.accounts.dto.UserDTO;
 import com.dianatuman.practicum.accounts.service.AccountService;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("accounts")
@@ -20,7 +18,7 @@ public class AccountController {
     }
 
     @GetMapping("/{login}")
-    public List<Account> getAllAccountsForUser(@PathVariable String login) {
+    public UserDTO getAllAccountsForUser(@PathVariable String login) {
         return accountService.getAllAccountsByLogin(login);
     }
 

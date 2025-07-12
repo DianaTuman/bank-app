@@ -4,20 +4,18 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDTO {
+public class RegisterUserDTO {
 
     private String login;
 
     private String name;
 
-    private Long birthdate;
+    private String password;
 
-    private List<AccountDTO> accounts = new ArrayList<>();
+    private Long birthdate;
 }

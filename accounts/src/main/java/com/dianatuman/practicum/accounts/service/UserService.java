@@ -2,12 +2,12 @@ package com.dianatuman.practicum.accounts.service;
 
 import com.dianatuman.practicum.accounts.dto.UserDTO;
 import com.dianatuman.practicum.accounts.dto.UserPasswordDTO;
+import com.dianatuman.practicum.accounts.dto.UsersListDTO;
 import com.dianatuman.practicum.accounts.entity.User;
 import com.dianatuman.practicum.accounts.mapper.UserMapper;
 import com.dianatuman.practicum.accounts.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -21,8 +21,8 @@ public class UserService {
         this.userMapper = userMapper;
     }
 
-    public List<UserDTO> getAllUsers() {
-        return userRepository.findAll().stream().map(userMapper::toDTO).toList();
+    public UsersListDTO getAllUsers() {
+        return new UsersListDTO(userRepository.findAll().stream().map(userMapper::toDTO).toList());
     }
 
     public UserPasswordDTO getUserPassword(String login) {
@@ -48,9 +48,6 @@ public class UserService {
             if (userDTO.getBirthdate() != null) {
                 user.setBirthdate(userDTO.getBirthdate());
             }
-            if (userDTO.getEmail() != null) {
-                user.setEmail(userDTO.getEmail());
-            }
         });
     }
 
@@ -60,5 +57,13 @@ public class UserService {
             user.setPassword(userPasswordDTO.getPassword());
             userRepository.save(user);
         });
+    }
+
+    public boolean userExists(String login) {
+        return userRepository.findById(login).isPresent();
+    }
+
+    public UserDTO getUser(String login) {
+        return userRepository.findById(login).map(userMapper::toDTO).orElseThrow();
     }
 }

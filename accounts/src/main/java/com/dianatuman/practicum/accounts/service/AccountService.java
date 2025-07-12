@@ -3,6 +3,7 @@ package com.dianatuman.practicum.accounts.service;
 import com.dianatuman.practicum.accounts.dto.AccountDTO;
 import com.dianatuman.practicum.accounts.dto.CashDTO;
 import com.dianatuman.practicum.accounts.dto.TransferDTO;
+import com.dianatuman.practicum.accounts.dto.UserDTO;
 import com.dianatuman.practicum.accounts.entity.Account;
 import com.dianatuman.practicum.accounts.entity.AccountId;
 import com.dianatuman.practicum.accounts.entity.User;
@@ -10,7 +11,6 @@ import com.dianatuman.practicum.accounts.mapper.AccountMapper;
 import com.dianatuman.practicum.accounts.repository.AccountRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -24,10 +24,12 @@ public class AccountService {
         this.accountMapper = accountMapper;
     }
 
-    public List<Account> getAllAccountsByLogin(String login) {
+    public UserDTO getAllAccountsByLogin(String login) {
         User user = new User();
         user.setLogin(login);
-        return accountRepository.findByUserLogin(user);
+        UserDTO result = new UserDTO();
+        result.setAccounts(accountRepository.findByUserLogin(user).stream().map(accountMapper::toDTO).toList());
+        return result;
     }
 
     public boolean cashAccount(CashDTO cashDTO) {

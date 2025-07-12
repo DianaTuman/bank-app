@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Data
@@ -20,11 +19,9 @@ public class User {
 
     private String name;
 
-    private String email;
-
     private String password;
 
-    private Date birthdate;
+    private Long birthdate;
 
     @OneToMany(mappedBy = "userLogin", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference

@@ -22,8 +22,7 @@ public class ExchangeService {
     }
 
     public List<CurrencyDTO> getRates() {
-        RatesDTO ratesDTO = restTemplate
-                .getForObject(exchangeServiceURL + "/rates", RatesDTO.class);
+        RatesDTO ratesDTO = restTemplate.getForObject(exchangeServiceURL + "/exchange/rates", RatesDTO.class);
         return ratesDTO.getCurrencyDTOS();
     }
 }
