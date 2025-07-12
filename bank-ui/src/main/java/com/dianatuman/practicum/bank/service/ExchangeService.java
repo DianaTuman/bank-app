@@ -1,6 +1,7 @@
 package com.dianatuman.practicum.bank.service;
 
 import com.dianatuman.practicum.bank.dto.CurrencyDTO;
+import com.dianatuman.practicum.bank.dto.RatesDTO;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -21,8 +22,8 @@ public class ExchangeService {
     }
 
     public List<CurrencyDTO> getRates() {
-        List<CurrencyDTO> currencyDTOS = restTemplate
-                .getForObject(exchangeServiceURL + "/rates", List.class);
-        return currencyDTOS;
+        RatesDTO ratesDTO = restTemplate
+                .getForObject(exchangeServiceURL + "/rates", RatesDTO.class);
+        return ratesDTO.getCurrencyDTOS();
     }
 }

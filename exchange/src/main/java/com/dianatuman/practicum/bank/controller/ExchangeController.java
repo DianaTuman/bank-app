@@ -1,13 +1,34 @@
 package com.dianatuman.practicum.bank.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.dianatuman.practicum.bank.dto.CurrencyTransferDTO;
+import com.dianatuman.practicum.bank.dto.RatesDTO;
+import com.dianatuman.practicum.bank.service.ExchangeService;
+import org.springframework.web.bind.annotation.*;
 
-@RestController("/exchange")
+@RestController
+@RequestMapping("exchange")
 public class ExchangeController {
 
-    @GetMapping("/rub")
-    public Integer getRub(){
-        return 1;
+    private final ExchangeService exchangeService;
+
+    public ExchangeController(ExchangeService exchangeService) {
+        this.exchangeService = exchangeService;
     }
+
+    @PostMapping
+    public Float exchange(@RequestBody CurrencyTransferDTO currencyTransferDTO) {
+        return exchangeService.exchange(currencyTransferDTO);
+    }
+
+    @GetMapping("rates")
+    public RatesDTO getRates() {
+        return exchangeService.getRates();
+    }
+
+    @PostMapping("rates")
+    public void setRates(@RequestBody RatesDTO ratesDTO) {
+        exchangeService.setRates(ratesDTO);
+    }
+
+
 }

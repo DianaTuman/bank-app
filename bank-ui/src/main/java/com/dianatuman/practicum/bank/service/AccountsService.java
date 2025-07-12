@@ -2,7 +2,6 @@ package com.dianatuman.practicum.bank.service;
 
 import com.dianatuman.practicum.bank.dto.UserDTO;
 import com.dianatuman.practicum.bank.dto.UserPasswordDTO;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

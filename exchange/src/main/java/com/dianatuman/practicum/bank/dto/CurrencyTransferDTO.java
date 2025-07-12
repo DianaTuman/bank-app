@@ -4,18 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDTO {
+public class CurrencyTransferDTO {
 
-    private String login;
+    String fromCurrency;
 
-    private String name;
+    String toCurrency;
 
-    private String email;
-
-    private Date birthdate;
+    Float amount;
 }

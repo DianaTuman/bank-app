@@ -4,18 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDTO {
+public class RatesDTO {
 
-    private String login;
+    List<CurrencyDTO> currencyDTOS;
 
-    private String name;
-
-    private String email;
-
-    private Date birthdate;
 }

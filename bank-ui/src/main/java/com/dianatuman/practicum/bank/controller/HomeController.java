@@ -15,6 +15,8 @@ public class HomeController {
     @GetMapping("/main")
     public String mainPage(Model model) {
 
+//        model.addAttribute("user", );
+
         //             		шаблон "main.html"
         //            		используется модель для заполнения шаблона:
         //            			"login" - строка с логином пользователя

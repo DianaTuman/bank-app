@@ -4,18 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDTO {
+public class CurrencyDTO {
 
-    private String login;
+    String title;
 
-    private String name;
+    String name;
 
-    private String email;
+    Float value;
 
-    private Date birthdate;
 }

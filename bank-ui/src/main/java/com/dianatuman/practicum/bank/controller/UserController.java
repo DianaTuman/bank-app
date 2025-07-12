@@ -1,6 +1,7 @@
 package com.dianatuman.practicum.bank.controller;
 
 import com.dianatuman.practicum.bank.service.CashService;
+import com.dianatuman.practicum.bank.service.TransferService;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -11,8 +12,11 @@ public class UserController {
 
     private final CashService cashService;
 
-    public UserController(CashService cashService) {
+    private final TransferService transferService;
+
+    public UserController(CashService cashService, TransferService transferService) {
         this.cashService = cashService;
+        this.transferService = transferService;
     }
 
     //only login == principal
@@ -45,13 +49,13 @@ public class UserController {
                        @RequestParam String action, @RequestParam String currency) {
         boolean cash = cashService.cash(login, currency, action, value);
         //        	Параметры:
-            //        		login - логин пользователя
-            //        		currency - строка с валютой
-            //        		value - сумма внесения/снятия
-            //        		action - действие (enum PUT иди GET)
-            //        	Возвращает:
-            //        		редирект на "/main"
-            return "redirect:./main";
+        //        		login - логин пользователя
+        //        		currency - строка с валютой
+        //        		value - сумма внесения/снятия
+        //        		action - действие (enum PUT иди GET)
+        //        	Возвращает:
+        //        		редирект на "/main"
+        return "redirect:./main";
     }
 
     @PostMapping("/transfer")
@@ -66,6 +70,7 @@ public class UserController {
         //        		to_login - логин пользователя, которому переводятся деньги
         //        	Возвращает:
         //        		редирект на "/main"
+        boolean transfer = transferService.transfer(login, from_currency, value, to_login, to_currency);
         return "redirect:./main";
     }
 }

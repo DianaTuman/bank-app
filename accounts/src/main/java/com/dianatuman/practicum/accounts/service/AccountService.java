@@ -49,8 +49,8 @@ public class AccountService {
         if (fromAccount.isPresent() && toAccount.isPresent()) {
             var account1 = fromAccount.get();
             var account2 = toAccount.get();
-            if (account1.updateValue(-transferDTO.getCashSum())) {
-                return account2.updateValue(transferDTO.getCashSum());
+            if (account1.updateValue(-transferDTO.getAmountFrom())) {
+                return account2.updateValue(transferDTO.getAmountTo());
             } else {
                 return false;
             }
