@@ -30,7 +30,7 @@ public class ExchangeGeneratorService {
         this.restTemplate = restTemplate;
     }
 
-    @Scheduled(cron = "0 * * * * *")
+    @Scheduled(cron = "* * * * * *")
     public void generateExchange() throws JsonProcessingException {
         List<CurrencyDTO> currencyDTOS = new ArrayList<>();
         Random rand = new Random();

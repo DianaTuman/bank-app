@@ -4,18 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDTO {
+public class AccountCurrencyDTO {
 
-    private String login;
+    private CurrencyDTO currency;
 
-    private String name;
+    private Float value;
 
-    private Long birthdate;
-
-    private List<AccountDTO> accounts;
+    private boolean exists;
 }
