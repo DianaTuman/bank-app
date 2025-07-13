@@ -24,7 +24,7 @@ public class TransferService {
         this.restTemplate = restTemplate;
     }
 
-    public boolean transfer(String login, String fromCurrency, Float value, String toLogin, String toCurrency) throws JsonProcessingException {
+    public String transfer(String login, String fromCurrency, Float value, String toLogin, String toCurrency) throws JsonProcessingException {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
         ObjectMapper mapper = new ObjectMapper();
@@ -35,7 +35,11 @@ public class TransferService {
         transferDTO.setAmountFrom(value);
 
         var jsonTransferDTO = mapper.writeValueAsString(transferDTO);
-        return Boolean.TRUE.equals(restTemplate.postForObject(transferServiceURL + "/transfer",
-                new HttpEntity<>(jsonTransferDTO, httpHeaders), Boolean.class));
+        try {
+            return restTemplate.postForObject(transferServiceURL + "/transfer",
+                    new HttpEntity<>(jsonTransferDTO, httpHeaders), String.class);
+        } catch (Throwable e) {
+            return "Transfer service is not working. Please try later.";
+        }
     }
 }

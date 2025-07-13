@@ -19,7 +19,7 @@ public class TransferController {
     }
 
     @PostMapping
-    public boolean transferAccount(@RequestBody TransferDTO transferDTO) throws JsonProcessingException {
+    public String transferAccount(@RequestBody TransferDTO transferDTO) throws JsonProcessingException {
         return transferService.transferAccount(transferDTO);
     }
 }

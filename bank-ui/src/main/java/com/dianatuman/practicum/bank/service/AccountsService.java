@@ -6,6 +6,7 @@ import com.dianatuman.practicum.bank.dto.UserPasswordDTO;
 import com.dianatuman.practicum.bank.dto.UsersListDTO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -18,8 +19,10 @@ import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 
+@Slf4j
 @RefreshScope
 @Service
 public class AccountsService implements UserDetailsService {
@@ -55,22 +58,38 @@ public class AccountsService implements UserDetailsService {
         return restTemplate.getForObject(accountsServiceURL + "/users", UsersListDTO.class).getUserDTOS();
     }
 
-    public String registerUser(String login, String password, String name, LocalDate birthdate) throws JsonProcessingException {
+    public String registerUser(String login, String password, String name, LocalDate birthdate)
+            throws JsonProcessingException {
         String result = "";
         var jsonUserDTO = mapper.writeValueAsString(
-                new RegisterUserDTO(login, name, passwordEncoder.encode(password), birthdate.toEpochDay()));
+                new RegisterUserDTO(login, name, passwordEncoder.encode(password),
+                        birthdate.atStartOfDay(ZoneId.systemDefault()).toEpochSecond()));
         try {
             restTemplate.postForEntity(accountsServiceURL + "/users",
                     new HttpEntity<>(jsonUserDTO, httpHeaders), String.class);
         } catch (HttpServerErrorException errorException) {
             result = "User with this login already exists!";
         } catch (Throwable e) {
+            log.error(e.getMessage());
             result = "Internal problems with the user service. Please try later.";
         }
         return result;
     }
 
-    public UserDTO getUserByName(String username) {
-        return restTemplate.getForObject(accountsServiceURL + "/users/" + username + "/info", UserDTO.class);
+    public UserDTO getUserByLogin(String login) {
+        return restTemplate.getForObject(accountsServiceURL + "/users/" + login + "/info", UserDTO.class);
+    }
+
+    public String editPassword(String login, String password) throws JsonProcessingException {
+        String result = "";
+        var jsonUserDTO = mapper.writeValueAsString(new UserPasswordDTO(login, passwordEncoder.encode(password)));
+        try {
+            restTemplate.put(accountsServiceURL + "/users/" + login + "/password",
+                    new HttpEntity<>(jsonUserDTO, httpHeaders));
+        } catch (Throwable e) {
+            log.error(e.getMessage());
+            result = "Internal problems with the user service. Please try later.";
+        }
+        return result;
     }
 }

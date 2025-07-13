@@ -31,12 +31,12 @@ public class UserController {
     }
 
     @PutMapping
-    public void editUser(@PathVariable UserDTO userDTO) {
+    public void editUser(@RequestBody UserDTO userDTO) {
         userService.editUser(userDTO);
     }
 
     @PutMapping("password")
-    public void editPassword(@PathVariable UserPasswordDTO userPasswordDTO) {
+    public void editPassword(@RequestBody UserPasswordDTO userPasswordDTO) {
         userService.editPassword(userPasswordDTO);
     }
 }

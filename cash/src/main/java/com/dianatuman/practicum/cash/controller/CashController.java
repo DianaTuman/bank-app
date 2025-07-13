@@ -19,7 +19,7 @@ public class CashController {
     }
 
     @PostMapping
-    public boolean cashAccount(@RequestBody CashDTO cashDTO) throws JsonProcessingException {
+    public String cashAccount(@RequestBody CashDTO cashDTO) throws JsonProcessingException {
         return cashService.cashAccount(cashDTO);
     }
 

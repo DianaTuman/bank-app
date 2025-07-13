@@ -24,7 +24,7 @@ public class CashService {
         this.restTemplate = restTemplate;
     }
 
-    public boolean cash(String login, String currency, String action, Float value) throws JsonProcessingException {
+    public String cash(String login, String currency, String action, Float value) throws JsonProcessingException {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
         ObjectMapper mapper = new ObjectMapper();
@@ -35,11 +35,15 @@ public class CashService {
         } else if ("GET".equals(action)) {
             cashDTO.setCashSum(-value);
         } else {
-            return false;
+            return "Action not supported.";
         }
 
         var jsonCashDTO = mapper.writeValueAsString(cashDTO);
-        return Boolean.TRUE.equals(restTemplate.postForObject(cashServiceURL + "/cash",
-                new HttpEntity<>(jsonCashDTO, httpHeaders), Boolean.class));
+        try {
+            return restTemplate.postForObject(cashServiceURL + "/cash",
+                    new HttpEntity<>(jsonCashDTO, httpHeaders), String.class);
+        } catch (Throwable e) {
+            return "Cash service is not working. Please try later.";
+        }
     }
 }

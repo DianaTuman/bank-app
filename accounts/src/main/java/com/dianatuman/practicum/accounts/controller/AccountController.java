@@ -33,12 +33,12 @@ public class AccountController {
     }
 
     @PostMapping("/cash")
-    public boolean cashAccount(@RequestBody CashDTO cashDTO) {
+    public String cashAccount(@RequestBody CashDTO cashDTO) {
         return accountService.cashAccount(cashDTO);
     }
 
     @PostMapping("/transfer")
-    public boolean transferAccount(@RequestBody TransferDTO transferDTO) {
+    public String transferAccount(@RequestBody TransferDTO transferDTO) {
         return accountService.transferAccount(transferDTO);
     }
 }

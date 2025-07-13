@@ -25,7 +25,7 @@ public class CashService {
         this.restTemplate = restTemplate;
     }
 
-    public boolean cashAccount(CashDTO cashDTO) throws JsonProcessingException {
+    public String cashAccount(CashDTO cashDTO) throws JsonProcessingException {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
         ObjectMapper mapper = new ObjectMapper();
@@ -33,13 +33,16 @@ public class CashService {
         var isBlocked = Boolean.TRUE.equals(restTemplate.postForObject(blockerServiceURL + "/blocker",
                 Math.abs(cashDTO.getCashSum()), Boolean.class));
         if (isBlocked) {
-            return false;
+            return "Operation was blocked as suspicious.";
         } else {
             var jsonCashDTO = mapper.writeValueAsString(cashDTO);
-            var isAccountOk = Boolean.TRUE.equals(restTemplate.postForObject(accountsServiceURL + "/cash",
-                    new HttpEntity<>(jsonCashDTO, httpHeaders), Boolean.class));
+            try {
+                return restTemplate.postForObject(accountsServiceURL + "/accounts/cash",
+                        new HttpEntity<>(jsonCashDTO, httpHeaders), String.class);
 //            restTemplate.postForObject(notificationServiceURL + "/cash", isAccountOk, Boolean.class);
-            return isAccountOk;
+            } catch (Throwable e) {
+                return "Account service is not working. Please try later.";
+            }
         }
     }
 }

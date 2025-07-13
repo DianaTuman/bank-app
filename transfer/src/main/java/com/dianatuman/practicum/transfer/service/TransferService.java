@@ -28,28 +28,35 @@ public class TransferService {
         this.restTemplate = restTemplate;
     }
 
-    public boolean transferAccount(TransferDTO transferDTO) throws JsonProcessingException {
+    public String transferAccount(TransferDTO transferDTO) throws JsonProcessingException {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
         ObjectMapper mapper = new ObjectMapper();
 
 
-        var isBlocked = Boolean.TRUE.equals(restTemplate
-                .postForObject(blockerServiceURL + "/blocker", Math.abs(transferDTO.getAmountFrom()), Boolean.class));
+        boolean isBlocked = Boolean.TRUE.equals(restTemplate
+                .postForObject(blockerServiceURL + "/block", Math.abs(transferDTO.getAmountFrom()), Boolean.class));
         if (isBlocked) {
-            return false;
+            return "Operation was blocked as suspicious.";
         } else {
             CurrencyTransferDTO currencyTransferDTO = new CurrencyTransferDTO(transferDTO);
             var jsonCurrencyTransferDTO = mapper.writeValueAsString(currencyTransferDTO);
-            Float amountTo = restTemplate.postForObject(exchangeServiceURL + "/exchange",
-                    new HttpEntity<>(jsonCurrencyTransferDTO, httpHeaders), Float.class);
+            Float amountTo;
+            try {
+                amountTo = restTemplate.postForObject(exchangeServiceURL + "/exchange",
+                        new HttpEntity<>(jsonCurrencyTransferDTO, httpHeaders), Float.class);
+            } catch (Throwable e) {
+                return "Exchange service is not working. Please try later.";
+            }
             transferDTO.setAmountTo(amountTo);
-            var jsonTransferDTO = mapper.writeValueAsString(currencyTransferDTO);
-            var isAccountOk = Boolean.TRUE.equals(restTemplate
-                    .postForObject(accountsServiceURL + "/transfer",
-                            new HttpEntity<>(jsonTransferDTO, httpHeaders), Boolean.class));
-//            restTemplate.postForObject(notificationServiceURL + "/transfer", isAccountOk, Boolean.class);
-            return isAccountOk;
+            var jsonTransferDTO = mapper.writeValueAsString(transferDTO);
+            try {
+                return restTemplate.postForObject(accountsServiceURL + "/accounts/transfer",
+                        new HttpEntity<>(jsonTransferDTO, httpHeaders), String.class);
+                //            restTemplate.postForObject(notificationServiceURL + "/transfer", isAccountOk, Boolean.class);
+            } catch (Throwable e) {
+                return "Account service is not working. Please try later.";
+            }
         }
     }
 }

@@ -32,19 +32,24 @@ public class AccountService {
         return result;
     }
 
-    public boolean cashAccount(CashDTO cashDTO) {
+    public String cashAccount(CashDTO cashDTO) {
         AccountId accountId = accountMapper.toAccountId(cashDTO.getAccountDTO());
         Optional<Account> byId = accountRepository.findById(accountId);
         if (byId.isPresent()) {
             var account = byId.get();
-            return account.updateValue(cashDTO.getCashSum());
+            if (account.updateValue(cashDTO.getCashSum())) {
+                accountRepository.save(account);
+                return "OK";
+            } else {
+                return "Not enough money on the account " + account.getAccountCurrency();
+            }
         } else {
-            return false;
+            return "Account not found.";
         }
     }
 
-    public boolean transferAccount(TransferDTO transferDTO) {
-        AccountId fromAccountId = accountMapper.toAccountId(transferDTO.getToAccountDTO());
+    public String transferAccount(TransferDTO transferDTO) {
+        AccountId fromAccountId = accountMapper.toAccountId(transferDTO.getFromAccountDTO());
         Optional<Account> fromAccount = accountRepository.findById(fromAccountId);
         AccountId toAccountId = accountMapper.toAccountId(transferDTO.getToAccountDTO());
         Optional<Account> toAccount = accountRepository.findById(toAccountId);
@@ -52,12 +57,15 @@ public class AccountService {
             var account1 = fromAccount.get();
             var account2 = toAccount.get();
             if (account1.updateValue(-transferDTO.getAmountFrom())) {
-                return account2.updateValue(transferDTO.getAmountTo());
+                accountRepository.save(account1);
+                account2.updateValue(transferDTO.getAmountTo());
+                accountRepository.save(account2);
+                return "OK";
             } else {
-                return false;
+                return "Not enough money on the account " + account1.getAccountCurrency();
             }
         } else {
-            return false;
+            return "Account(s) not found.";
         }
     }
 

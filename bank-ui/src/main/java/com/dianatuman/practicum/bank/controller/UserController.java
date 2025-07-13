@@ -1,62 +1,102 @@
 package com.dianatuman.practicum.bank.controller;
 
+import com.dianatuman.practicum.bank.service.AccountsService;
 import com.dianatuman.practicum.bank.service.CashService;
 import com.dianatuman.practicum.bank.service.TransferService;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-@Controller("/user/{login}")
+import java.time.LocalDate;
+
+@Controller
+@RequestMapping("/user/{login}")
 public class UserController {
 
+    private final AccountsService accountsService;
     private final CashService cashService;
-
     private final TransferService transferService;
 
-    public UserController(CashService cashService, TransferService transferService) {
+    public UserController(AccountsService accountsService, CashService cashService, TransferService transferService) {
+        this.accountsService = accountsService;
         this.cashService = cashService;
         this.transferService = transferService;
     }
 
-    //only login == principal
+    @PreAuthorize("#login == principal.username")
     @PostMapping("/editPassword")
-    public String editPassword() {
-        // POST "/user/{login}/editPassword" - эндпоинт смены пароля (записывает список ошибок, если есть, в passwordErrors)
-        //        	Параметры:
-        //        		login - логин пользователя
-        //        		password - новый пароль
-        //        		confirm_password - новый пароль второй раз
-        //        	Возвращает:
-        //        		редирект на "/main"
-        return "redirect:./main";
+    public ModelAndView editPassword(@PathVariable("login") String login, @RequestParam("password") String password,
+                                     @RequestParam("confirm_password") String confirmPassword,
+                                     RedirectAttributes attributes)
+            throws JsonProcessingException {
+        String errors = "";
+        if (password.isEmpty()) {
+            errors = errors.concat("Password should not be empty.");
+        } else if (password.equals(confirmPassword)) {
+            String s = accountsService.editPassword(login, password);
+            if (!s.isEmpty()) {
+                errors = errors.concat(s);
+            }
+        } else {
+            errors = errors.concat("Passwords do not match.");
+        }
+        if (!errors.isEmpty()) {
+            attributes.addFlashAttribute("passwordErrors", errors);
+        }
+        return new ModelAndView("redirect:/main");
     }
 
+    @PreAuthorize("#login == principal.username")
     @PostMapping("/editUserAccounts")
-    public String editUserAccounts() {
+    public ModelAndView editUserAccounts(RedirectAttributes attributes, @PathVariable("login") String login,
+                                         @RequestParam(value = "name", required = false) String name,
+                                         @RequestParam(value = "birthdate", required = false) LocalDate birthdate,
+                                         @RequestParam(value = "account", required = false) String... account) {
+        String errors = "";
         //Параметры:
         //        		login - логин пользователя
         //        		name - фамилия и имя пользователя
         //        		birthdate - дата рождения пользователя (LocalDate)
         //        		account - список строк с валютами пользователя, для которых у него есть счета
-        //        	Возвращает:
-        //        		редирект на "/main"
-        return "redirect:./main";
+        if (!errors.isEmpty()) {
+            attributes.addFlashAttribute("userAccountsErrors", errors);
+        }
+        return new ModelAndView("redirect:/main");
     }
 
+    @PreAuthorize("#login == principal.username")
     @PostMapping("/cash")
-    public String cash(@PathVariable String login, @RequestParam Float value,
-                       @RequestParam String action, @RequestParam String currency) throws JsonProcessingException {
-        boolean cash = cashService.cash(login, currency, action, value);
-        return "redirect:./main";
+    public ModelAndView cash(RedirectAttributes attributes, @PathVariable("login") String login,
+                             @RequestParam("currency") String currency,
+                             @RequestParam("value") Float value,
+                             @RequestParam("action") String action) throws JsonProcessingException {
+        String cash = cashService.cash(login, currency, action, value);
+        if (!cash.equals("OK")) {
+            attributes.addFlashAttribute("cashErrors", cash);
+        }
+        return new ModelAndView("redirect:/main");
     }
 
+    @PreAuthorize("#login == principal.username")
     @PostMapping("/transfer")
-    public String transfer(@PathVariable String login, @RequestParam String from_currency,
-                           @RequestParam Float value,
-                           @RequestParam String to_login, @RequestParam String to_currency) throws JsonProcessingException {
-        boolean transfer = transferService.transfer(login, from_currency, value, to_login, to_currency);
-        return "redirect:./main";
+    public ModelAndView transfer(RedirectAttributes attributes, @PathVariable("login") String login,
+                                 @RequestParam String from_currency, @RequestParam Float value,
+                                 @RequestParam String to_login, @RequestParam String to_currency)
+            throws JsonProcessingException {
+        String transfer = transferService.transfer(login, from_currency, value, to_login, to_currency);
+        if (!transfer.equals("OK")) {
+            if (login.equals(to_login)) {
+                attributes.addFlashAttribute("transferErrors", transfer);
+            } else {
+                attributes.addFlashAttribute("transferOtherErrors", transfer);
+            }
+        }
+        return new ModelAndView("redirect:/main");
     }
 }
