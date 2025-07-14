@@ -69,25 +69,17 @@ public class AccountService {
         }
     }
 
-    public boolean createAccount(AccountDTO accountDTO) {
+    public void createAccount(AccountDTO accountDTO) {
         AccountId accountId = accountMapper.toAccountId(accountDTO);
         Optional<Account> byId = accountRepository.findById(accountId);
-        if (byId.isPresent()) {
-            return false;
-        } else {
+        if (byId.isEmpty()) {
             accountRepository.save(accountMapper.toAccount(accountDTO));
-            return true;
         }
     }
 
-    public boolean deleteAccount(AccountDTO accountDTO) {
+    public void deleteAccount(AccountDTO accountDTO) {
         AccountId accountId = accountMapper.toAccountId(accountDTO);
         Optional<Account> byId = accountRepository.findById(accountId);
-        if (byId.isPresent()) {
-            accountRepository.delete(byId.get());
-            return true;
-        } else {
-            return false;
-        }
+        byId.ifPresent(accountRepository::delete);
     }
 }

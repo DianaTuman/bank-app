@@ -57,14 +57,10 @@ public class UserController {
     public ModelAndView editUserAccounts(RedirectAttributes attributes, @PathVariable("login") String login,
                                          @RequestParam(value = "name", required = false) String name,
                                          @RequestParam(value = "birthdate", required = false) LocalDate birthdate,
-                                         @RequestParam(value = "account", required = false) String... account) {
-        String errors = "";
-        //Параметры:
-        //        		login - логин пользователя
-        //        		name - фамилия и имя пользователя
-        //        		birthdate - дата рождения пользователя (LocalDate)
-        //        		account - список строк с валютами пользователя, для которых у него есть счета
-        if (!errors.isEmpty()) {
+                                         @RequestParam(value = "account", required = false) String... account)
+            throws JsonProcessingException {
+        String errors = accountsService.editUserAccounts(login, name, birthdate, account);
+        if (!errors.equals("OK")) {
             attributes.addFlashAttribute("userAccountsErrors", errors);
         }
         return new ModelAndView("redirect:/main");

@@ -1,11 +1,12 @@
 package com.dianatuman.practicum.accounts.controller;
 
-import com.dianatuman.practicum.accounts.dto.AccountDTO;
 import com.dianatuman.practicum.accounts.dto.CashDTO;
 import com.dianatuman.practicum.accounts.dto.TransferDTO;
-import com.dianatuman.practicum.accounts.dto.UserDTO;
 import com.dianatuman.practicum.accounts.service.AccountService;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("accounts")
@@ -15,21 +16,6 @@ public class AccountController {
 
     public AccountController(AccountService accountService) {
         this.accountService = accountService;
-    }
-
-    @GetMapping("/{login}")
-    public UserDTO getAllAccountsForUser(@PathVariable String login) {
-        return accountService.getAllAccountsByLogin(login);
-    }
-
-    @PostMapping("/{login}")
-    public boolean createAccount(@RequestBody AccountDTO accountDTO) {
-        return accountService.createAccount(accountDTO);
-    }
-
-    @DeleteMapping("/{login}")
-    public boolean deleteAccount(@RequestBody AccountDTO accountDTO) {
-        return accountService.deleteAccount(accountDTO);
     }
 
     @PostMapping("/cash")

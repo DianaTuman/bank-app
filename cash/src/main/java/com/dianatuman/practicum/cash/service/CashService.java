@@ -30,7 +30,7 @@ public class CashService {
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
         ObjectMapper mapper = new ObjectMapper();
 
-        var isBlocked = Boolean.TRUE.equals(restTemplate.postForObject(blockerServiceURL + "/blocker",
+        var isBlocked = Boolean.TRUE.equals(restTemplate.postForObject(blockerServiceURL + "/block",
                 Math.abs(cashDTO.getCashSum()), Boolean.class));
         if (isBlocked) {
             return "Operation was blocked as suspicious.";

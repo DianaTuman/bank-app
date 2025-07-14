@@ -23,7 +23,7 @@ public class User {
 
     private Long birthdate;
 
-    @OneToMany(mappedBy = "userLogin", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "userLogin")
     @JsonManagedReference
     private List<Account> accounts = new ArrayList<>();
 

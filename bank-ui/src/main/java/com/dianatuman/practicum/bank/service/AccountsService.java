@@ -1,9 +1,6 @@
 package com.dianatuman.practicum.bank.service;
 
-import com.dianatuman.practicum.bank.dto.RegisterUserDTO;
-import com.dianatuman.practicum.bank.dto.UserDTO;
-import com.dianatuman.practicum.bank.dto.UserPasswordDTO;
-import com.dianatuman.practicum.bank.dto.UsersListDTO;
+import com.dianatuman.practicum.bank.dto.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +17,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
@@ -91,5 +89,24 @@ public class AccountsService implements UserDetailsService {
             result = "Internal problems with the user service. Please try later.";
         }
         return result;
+    }
+
+    public String editUserAccounts(String login, String name, LocalDate birthdate, String[] accounts) throws JsonProcessingException {
+        Long epochSecond = null;
+        if (birthdate != null) {
+            epochSecond = birthdate.atStartOfDay(ZoneId.systemDefault()).toEpochSecond();
+        }
+        List<AccountDTO> list = List.of();
+        if (accounts != null) {
+            list = Arrays.stream(accounts).map(account -> new AccountDTO(login, account)).toList();
+        }
+        var jsonUserDTO = mapper.writeValueAsString(
+                new UserDTO(login, name, epochSecond, list));
+        try {
+            return restTemplate.postForObject(accountsServiceURL + "/users/" + login,
+                    new HttpEntity<>(jsonUserDTO, httpHeaders), String.class);
+        } catch (Throwable e) {
+            return "Internal problems with the user service. Please try later.";
+        }
     }
 }

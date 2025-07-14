@@ -30,9 +30,9 @@ public class UserController {
         userService.deleteUser(login);
     }
 
-    @PutMapping
-    public void editUser(@RequestBody UserDTO userDTO) {
-        userService.editUser(userDTO);
+    @PostMapping
+    public String editUser(@RequestBody UserDTO userDTO) {
+        return userService.editUser(userDTO);
     }
 
     @PutMapping("password")
