@@ -38,6 +38,7 @@ public class SecurityConfiguration {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/signup").permitAll()
+                        .requestMatchers("/api/notification").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterAt(authFilter, AuthenticationFilter.class)

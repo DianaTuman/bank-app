@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
 
 import java.util.Objects;
 
@@ -29,7 +28,6 @@ public class Account {
     @Column(length = 3, nullable = false)
     private String accountCurrency;
 
-    @ColumnDefault("0")
     private Float value;
 
     @Override
@@ -45,6 +43,9 @@ public class Account {
     }
 
     public boolean updateValue(Float cashSum) {
+        if (value == null) {
+            value = 0.0f;
+        }
         if (value + cashSum > 0) {
             value += cashSum;
             return true;

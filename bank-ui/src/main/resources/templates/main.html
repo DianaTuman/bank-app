@@ -25,6 +25,17 @@
                 .catch(error => td.innerHTML = 'Ошибка при получении данных курсов валют');
         }, 1000);
     </script>
+    <script language="JavaScript">
+        setInterval(() => {
+            fetch('http://localhost:8080/api/notification')
+                .then(response => response.text())
+                .then(text => {
+                if (text !== "") {
+                    alert(text);
+                    }
+                })
+        }, 1000);
+    </script>
 </head>
 
 <body>

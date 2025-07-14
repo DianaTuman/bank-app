@@ -9,6 +9,8 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Objects;
+
 @Service
 public class CashService {
 
@@ -19,7 +21,7 @@ public class CashService {
     //    @Value("${bank-services.cash}")
     private final String blockerServiceURL = "http://blocker-service";
     //    @Value("${bank-services.cash}")
-    private final String notificationServiceURL = "http://notification-service";
+    private final String notificationServiceURL = "http://notifications-service";
 
     public CashService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
@@ -37,9 +39,12 @@ public class CashService {
         } else {
             var jsonCashDTO = mapper.writeValueAsString(cashDTO);
             try {
-                return restTemplate.postForObject(accountsServiceURL + "/accounts/cash",
+                String s = restTemplate.postForObject(accountsServiceURL + "/accounts/cash",
                         new HttpEntity<>(jsonCashDTO, httpHeaders), String.class);
-//            restTemplate.postForObject(notificationServiceURL + "/cash", isAccountOk, Boolean.class);
+                if (Objects.equals(s, "OK")) {
+                    restTemplate.postForLocation(notificationServiceURL + "/notifications/cash", cashDTO);
+                }
+                return s;
             } catch (Throwable e) {
                 return "Account service is not working. Please try later.";
             }

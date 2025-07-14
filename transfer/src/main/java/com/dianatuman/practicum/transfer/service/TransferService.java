@@ -10,6 +10,8 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Objects;
+
 @Service
 public class TransferService {
 
@@ -22,7 +24,7 @@ public class TransferService {
     //    @Value("${bank-services.cash}")
     private final String blockerServiceURL = "http://blocker-service";
     //    @Value("${bank-services.cash}")
-    private final String notificationServiceURL = "http://notification-service";
+    private final String notificationServiceURL = "http://notifications-service";
 
     public TransferService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
@@ -51,9 +53,12 @@ public class TransferService {
             transferDTO.setAmountTo(amountTo);
             var jsonTransferDTO = mapper.writeValueAsString(transferDTO);
             try {
-                return restTemplate.postForObject(accountsServiceURL + "/accounts/transfer",
+                String s = restTemplate.postForObject(accountsServiceURL + "/accounts/transfer",
                         new HttpEntity<>(jsonTransferDTO, httpHeaders), String.class);
-                //            restTemplate.postForObject(notificationServiceURL + "/transfer", isAccountOk, Boolean.class);
+                if (Objects.equals(s, "OK")) {
+                    restTemplate.postForLocation(notificationServiceURL + "/notifications/transfer", transferDTO);
+                }
+                return s;
             } catch (Throwable e) {
                 return "Account service is not working. Please try later.";
             }
