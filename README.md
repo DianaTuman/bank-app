@@ -14,7 +14,7 @@ The application will start at **localhost:8080**.
 
 ### **To run this application without Docker:**
 
-* Localhost ports **8080, 8081, 8082, 8083, 8084, 8085, 8086, 8087** must be free
+* Localhost ports **8080, 8081, 8082, 8083, 8084, 8085, 8086, 8087** must be free.
 * **PostgreSQL** must be installed and running at **localhost:5432**.
   Environment variables **'DB_USER'** and **'DB_PASS'** must be set for accessing database and a schema named *
   *practicum** must exist in database.
@@ -26,7 +26,6 @@ The application will start at **localhost:8080**.
 
 ### **To run this application with Docker:**
 
-**Docker** must be installed and running
-
+**Docker** must be installed and running. Localhost port **8080** must be free.
 1. **gradle clean buildAll** command to create a jars
 2. **docker-compose up --build** command to run the jars inside the docker container

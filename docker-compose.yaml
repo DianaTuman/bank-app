@@ -1,4 +1,9 @@
 services:
+  consul:
+    image: 'hashicorp/consul:1.21'
+    ports:
+      - "8500:8500"
+
   bank-ui:
     build:
       context: ./bank-ui
@@ -7,26 +12,25 @@ services:
       - "8080:8080"
     depends_on:
       - consul
-      - keycloak
-      - accounts-service
+#      - keycloak
+      - accounts
     environment:
       - 'SPRING_CLOUD_CONSUL_HOST=http://consul'
-      - 'SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_TOKEN_URI=http://keycloak:8080/realms/master/protocol/openid-connect/token'
-      - 'SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_JWk_SET_URI=http://keycloak:8080/realms/master/protocol/openid-connect/certs'
-      - 'SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_USER_INFO_URI=http://keycloak:8080/realms/master/protocol/openid-connect/userinfo'
-      - 'SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_AUTHORIZATION_URI=http://keycloak:8080/realms/master/protocol/openid-connect/auth'
+#      - 'SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_TOKEN_URI=http://keycloak:8080/realms/master/protocol/openid-connect/token'
+#      - 'SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_JWk_SET_URI=http://keycloak:8080/realms/master/protocol/openid-connect/certs'
+#      - 'SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_USER_INFO_URI=http://keycloak:8080/realms/master/protocol/openid-connect/userinfo'
+#      - 'SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_AUTHORIZATION_URI=http://keycloak:8080/realms/master/protocol/openid-connect/auth'
 
   accounts:
     build:
       context: ./accounts
       dockerfile: Dockerfile
-    ports:
-      - "8081:8081"
     depends_on:
       - consul
       - db-postgres
     environment:
-      - 'SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/compose-postgres'
+      - 'SPRING_CLOUD_CONSUL_HOST=http://consul'
+      - 'SPRING_DATASOURCE_URL=jdbc:postgresql://db-postgres:5432/compose-postgres'
       - 'SPRING_DATASOURCE_USERNAME=compose-postgres'
       - 'SPRING_DATASOURCE_PASSWORD=compose-postgres'
 
@@ -37,18 +41,71 @@ services:
       - POSTGRES_USER=compose-postgres
       - POSTGRES_PASSWORD=compose-postgres
 
-  keycloak:
-    image: 'quay.io/keycloak/keycloak:26.2.5'
-    command:
-      - start-dev
-      - --import-realm
-    volumes:
-      - ./keycloak/:/opt/keycloak/data/import/
+  blocker:
+    build:
+      context: ./blocker
+      dockerfile: Dockerfile
+    depends_on:
+      - consul
     environment:
-      - KC_BOOTSTRAP_ADMIN_USERNAME=admin
-      - KC_BOOTSTRAP_ADMIN_PASSWORD=admin
+      - 'SPRING_CLOUD_CONSUL_HOST=http://consul'
 
-  consul:
-    image: 'hashicorp/consul:1.21'
-    ports:
-      - "8500:8500"
+  cash:
+    build:
+      context: ./cash
+      dockerfile: Dockerfile
+    depends_on:
+      - blocker
+      - consul
+    environment:
+      - 'SPRING_CLOUD_CONSUL_HOST=http://consul'
+
+  exchange:
+    build:
+      context: ./exchange
+      dockerfile: Dockerfile
+    depends_on:
+      - consul
+      - exchange-generator
+    environment:
+      - 'SPRING_CLOUD_CONSUL_HOST=http://consul'
+
+  exchange-generator:
+    build:
+      context: ./exchange-generator
+      dockerfile: Dockerfile
+    depends_on:
+      - consul
+    environment:
+      - 'SPRING_CLOUD_CONSUL_HOST=http://consul'
+
+  notifications:
+    build:
+      context: ./notifications
+      dockerfile: Dockerfile
+    depends_on:
+      - consul
+    environment:
+      - 'SPRING_CLOUD_CONSUL_HOST=http://consul'
+
+  transfer:
+    build:
+      context: ./transfer
+      dockerfile: Dockerfile
+    depends_on:
+      - consul
+      - blocker
+      - exchange
+    environment:
+      - 'SPRING_CLOUD_CONSUL_HOST=http://consul'
+
+#  keycloak:
+#    image: 'quay.io/keycloak/keycloak:26.2.5'
+#    command:
+#      - start-dev
+#      - --import-realm
+#    volumes:
+#      - ./keycloak/:/opt/keycloak/data/import/
+#    environment:
+#      - KC_BOOTSTRAP_ADMIN_USERNAME=admin
+#      - KC_BOOTSTRAP_ADMIN_PASSWORD=admin
