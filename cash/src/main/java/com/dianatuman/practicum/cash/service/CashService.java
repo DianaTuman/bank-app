@@ -3,6 +3,7 @@ package com.dianatuman.practicum.cash.service;
 import com.dianatuman.practicum.cash.dto.CashDTO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -16,12 +17,12 @@ public class CashService {
 
     private final RestTemplate restTemplate;
 
-    //    @Value("${bank-services.cash}")
-    private final String accountsServiceURL = "http://accounts-service";
-    //    @Value("${bank-services.cash}")
-    private final String blockerServiceURL = "http://blocker-service";
-    //    @Value("${bank-services.cash}")
-    private final String notificationServiceURL = "http://notifications-service";
+    @Value("${bank-services.accounts}")
+    private String accountsServiceURL;
+    @Value("${bank-services.blocker}")
+    private String blockerServiceURL;
+    @Value("${bank-services.notification}")
+    private String notificationServiceURL;
 
     public CashService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;

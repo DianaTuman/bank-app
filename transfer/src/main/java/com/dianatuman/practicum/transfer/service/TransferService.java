@@ -4,6 +4,7 @@ import com.dianatuman.practicum.transfer.dto.CurrencyTransferDTO;
 import com.dianatuman.practicum.transfer.dto.TransferDTO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -17,14 +18,14 @@ public class TransferService {
 
     private final RestTemplate restTemplate;
 
-    //    @Value("${bank-services.cash}")
-    private final String accountsServiceURL = "http://accounts-service";
-    //    @Value("${bank-services.cash}")
-    private final String exchangeServiceURL = "http://exchange-service";
-    //    @Value("${bank-services.cash}")
-    private final String blockerServiceURL = "http://blocker-service";
-    //    @Value("${bank-services.cash}")
-    private final String notificationServiceURL = "http://notifications-service";
+    @Value("${bank-services.accounts}")
+    private String accountsServiceURL;
+    @Value("${bank-services.blocker}")
+    private String blockerServiceURL;
+    @Value("${bank-services.notification}")
+    private String notificationServiceURL;
+    @Value("${bank-services.exchange}")
+    private String exchangeServiceURL;
 
     public TransferService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;

@@ -4,6 +4,7 @@ import com.dianatuman.practicum.bank.dto.AccountDTO;
 import com.dianatuman.practicum.bank.dto.TransferDTO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -17,8 +18,8 @@ public class TransferService {
 
     private final RestTemplate restTemplate;
 
-    //    @Value("${bank-services.transfer}")
-    private String transferServiceURL = "http://transfer-service";
+    @Value("${bank-services.transfer}")
+    private String transferServiceURL;
 
     public TransferService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;

@@ -1,0 +1,54 @@
+[
+  {
+    "key": "config/exchange-generator-service/bank-services.exchange",
+    "value": "aHR0cDovL2V4Y2hhbmdlLXNlcnZpY2U="
+  },
+  {
+    "key": "config/bank-ui/bank-services.accounts",
+    "value": "aHR0cDovL2FjY291bnRzLXNlcnZpY2U="
+  },
+  {
+    "key": "config/bank-ui/bank-services.transfer",
+    "value": "aHR0cDovL3RyYW5zZmVyLXNlcnZpY2U="
+  },
+  {
+    "key": "config/bank-ui/bank-services.cash",
+    "value": "aHR0cDovL2Nhc2gtc2VydmljZQ=="
+  },
+  {
+    "key": "config/bank-ui/bank-services.exchange",
+    "value": "aHR0cDovL2V4Y2hhbmdlLXNlcnZpY2U="
+  },
+  {
+    "key": "config/cash-service/bank-services.accounts",
+    "value": "aHR0cDovL2FjY291bnRzLXNlcnZpY2U="
+  },
+  {
+    "key": "config/cash-service/bank-services.blocker",
+    "value": "aHR0cDovL2Jsb2NrZXItc2VydmljZQ=="
+  },
+  {
+    "key": "config/cash-service/bank-services.notification",
+    "value": "aHR0cDovL25vdGlmaWNhdGlvbnMtc2VydmljZQ=="
+  },
+  {
+    "key": "config/transfer-service/bank-services.accounts",
+    "value": "aHR0cDovL2FjY291bnRzLXNlcnZpY2U="
+  },
+  {
+    "key": "config/transfer-service/bank-services.blocker",
+    "value": "aHR0cDovL2Jsb2NrZXItc2VydmljZQ=="
+  },
+  {
+    "key": "config/transfer-service/bank-services.notification",
+    "value": "aHR0cDovL25vdGlmaWNhdGlvbnMtc2VydmljZQ=="
+  },
+  {
+    "key": "config/transfer-service/bank-services.exchange",
+    "value": "aHR0cDovL2V4Y2hhbmdlLXNlcnZpY2U="
+  },
+  {
+    "key": "config/notifications-service/bank-services.bank-ui",
+    "value": "aHR0cDovL2JhbmstdWk="
+  }
+]

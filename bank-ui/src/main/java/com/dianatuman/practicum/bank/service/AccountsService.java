@@ -4,6 +4,7 @@ import com.dianatuman.practicum.bank.dto.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -29,8 +30,8 @@ public class AccountsService implements UserDetailsService {
 
     private final PasswordEncoder passwordEncoder;
 
-    //    @Value("${bank-services.accounts}")
-    private String accountsServiceURL = "http://accounts-service";
+    @Value("${bank-services.accounts}")
+    private String accountsServiceURL;
     HttpHeaders httpHeaders = new HttpHeaders();
     ObjectMapper mapper = new ObjectMapper();
 

@@ -1,13 +1,14 @@
 package com.dianatuman.practicum.notifications.service;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 @Service
 public class NotificationsService {
 
-    //    @Value("${bank-services.cash}")
-    private final String bankUIURL = "http://bank-ui";
+    @Value("${bank-services.bank-ui}")
+    private String bankUIURL;
 
     private final RestTemplate restTemplate;
 

@@ -5,6 +5,7 @@ import com.dianatuman.practicum.generator.dto.RatesDTO;
 import com.dianatuman.practicum.generator.enums.BankCurrency;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -23,8 +24,8 @@ public class ExchangeGeneratorService {
 
     private final RestTemplate restTemplate;
 
-    //    @Value("${bank-services.cash}")
-    private final String exchangeServiceURL = "http://exchange-service";
+    @Value("${bank-services.exchange}")
+    private String exchangeServiceURL;
 
     public ExchangeGeneratorService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;

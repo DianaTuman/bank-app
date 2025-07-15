@@ -4,6 +4,7 @@ import com.dianatuman.practicum.bank.dto.AccountDTO;
 import com.dianatuman.practicum.bank.dto.CashDTO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -17,8 +18,8 @@ public class CashService {
 
     private final RestTemplate restTemplate;
 
-    //    @Value("${bank-services.cash}")
-    private String cashServiceURL = "http://cash-service";
+    @Value("${bank-services.cash}")
+    private String cashServiceURL;
 
     public CashService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
