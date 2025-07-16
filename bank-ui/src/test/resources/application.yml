@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: bank-ui            # Имя сервиса в реестре Consul
+
+bank-services:
+  accounts: ""
+  cash: ""
+  exchange: ""
+  transfer: ""
