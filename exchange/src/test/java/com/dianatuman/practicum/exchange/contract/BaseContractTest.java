@@ -1,11 +1,11 @@
-package com.dianatuman.practicum.bank.contract;
+package com.dianatuman.practicum.exchange.contract;
 
-import com.dianatuman.practicum.bank.ExchangeApplication;
-import com.dianatuman.practicum.bank.controller.ExchangeController;
-import com.dianatuman.practicum.bank.dto.CurrencyDTO;
-import com.dianatuman.practicum.bank.dto.CurrencyTransferDTO;
-import com.dianatuman.practicum.bank.dto.RatesDTO;
-import com.dianatuman.practicum.bank.service.ExchangeService;
+import com.dianatuman.practicum.exchange.ExchangeApplication;
+import com.dianatuman.practicum.exchange.controller.ExchangeController;
+import com.dianatuman.practicum.exchange.dto.CurrencyDTO;
+import com.dianatuman.practicum.exchange.dto.CurrencyTransferDTO;
+import com.dianatuman.practicum.exchange.dto.RatesDTO;
+import com.dianatuman.practicum.exchange.service.ExchangeService;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mockito;

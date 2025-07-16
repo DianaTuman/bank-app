@@ -1,8 +1,8 @@
-package com.dianatuman.practicum.bank.service;
+package com.dianatuman.practicum.exchange.service;
 
-import com.dianatuman.practicum.bank.dto.CurrencyDTO;
-import com.dianatuman.practicum.bank.dto.CurrencyTransferDTO;
-import com.dianatuman.practicum.bank.dto.RatesDTO;
+import com.dianatuman.practicum.exchange.dto.CurrencyDTO;
+import com.dianatuman.practicum.exchange.dto.CurrencyTransferDTO;
+import com.dianatuman.practicum.exchange.dto.RatesDTO;
 import org.springframework.stereotype.Service;
 
 @Service

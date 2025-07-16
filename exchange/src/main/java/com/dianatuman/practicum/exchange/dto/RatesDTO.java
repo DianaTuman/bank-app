@@ -1,4 +1,4 @@
-package com.dianatuman.practicum.bank.dto;
+package com.dianatuman.practicum.exchange.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

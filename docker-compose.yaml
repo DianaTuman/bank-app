@@ -1,11 +1,10 @@
 services:
   consul:
-    image: 'hashicorp/consul:1.21'
+    build:
+      context: ./consul
+      dockerfile: Dockerfile
     ports:
       - "8500:8500"
-    volumes:
-      - ./consul/key_value.json:/consul/tmp/key_value.json
-#    command: "consul kv import @consul/tmp/key_value.json"
 
   bank-ui:
     build:

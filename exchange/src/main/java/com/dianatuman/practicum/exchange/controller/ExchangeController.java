@@ -1,8 +1,8 @@
-package com.dianatuman.practicum.bank.controller;
+package com.dianatuman.practicum.exchange.controller;
 
-import com.dianatuman.practicum.bank.dto.CurrencyTransferDTO;
-import com.dianatuman.practicum.bank.dto.RatesDTO;
-import com.dianatuman.practicum.bank.service.ExchangeService;
+import com.dianatuman.practicum.exchange.dto.CurrencyTransferDTO;
+import com.dianatuman.practicum.exchange.dto.RatesDTO;
+import com.dianatuman.practicum.exchange.service.ExchangeService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
