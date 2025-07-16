@@ -1,0 +1,17 @@
+plugins {
+    id 'org.springframework.cloud.contract' version '4.3.0'
+}
+
+dependencies {
+    testImplementation 'org.springframework.cloud:spring-cloud-starter-contract-verifier:4.3.0'
+}
+
+tasks.named('contractTest') {
+    useJUnitPlatform()
+}
+
+contracts {
+    testMode = 'MockMvc'
+    baseClassForTests = 'com.dianatuman.practicum.exchange.contract.BaseContractTest'
+    contractsDslDir = project.file('src/test/resources/contracts')
+}

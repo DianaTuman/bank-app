@@ -32,10 +32,14 @@ subprojects {
     dependencies {
         implementation 'org.springframework.cloud:spring-cloud-starter-consul-discovery:4.3.0'
         implementation 'org.springframework.cloud:spring-cloud-starter-consul-config:4.3.0'
-        implementation'org.springframework.boot:spring-boot-starter-actuator'
+        implementation 'org.springframework.boot:spring-boot-starter-actuator'
         implementation 'org.springframework.boot:spring-boot-starter-web'
         compileOnly 'org.projectlombok:lombok'
         annotationProcessor 'org.projectlombok:lombok'
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+        testImplementation 'org.springframework.boot:spring-boot-testcontainers'
+        testImplementation 'org.testcontainers:junit-jupiter'
+        testImplementation 'org.testcontainers:consul:1.21.3'
         testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     }
 
