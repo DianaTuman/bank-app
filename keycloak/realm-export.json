@@ -758,7 +758,7 @@
     {
       "id": "502db2cd-31e4-4083-822f-bbe9364cbee9",
       "clientId": "gateway-api",
-      "name": "WebShop",
+      "name": "Gateway API for Bank App.",
       "description": "Test client.",
       "rootUrl": "",
       "adminUrl": "",

@@ -15,9 +15,8 @@ public class RouteConfiguration {
                 .route("accounts_route", r -> r
                         .path("/accounts/**")
                         .filters(f ->
-                                f.retry(2)
-                                        .circuitBreaker(c -> c.setName("exampleCircuitBreaker")
-                                                .setFallbackUri("/fallback")))
+                                f.circuitBreaker(c -> c.setName("exampleCircuitBreaker")
+                                        .setFallbackUri("/fallback")))
                         .uri("lb://accounts-service"))
                 .route("cash_route", r -> r
                         .path("/cash/**")

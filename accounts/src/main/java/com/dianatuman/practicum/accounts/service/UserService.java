@@ -50,7 +50,7 @@ public class UserService {
         Optional<User> byId = userRepository.findById(userDTO.getLogin());
         if (byId.isPresent()) {
             var user = byId.get();
-            if (userDTO.getName() != null || !user.getName().isEmpty()) {
+            if (userDTO.getName() != null && !userDTO.getName().isEmpty()) {
                 user.setName(userDTO.getName());
                 userRepository.save(user);
             }

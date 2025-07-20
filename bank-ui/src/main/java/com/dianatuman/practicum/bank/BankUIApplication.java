@@ -15,10 +15,5 @@ public class BankUIApplication {
         SpringApplication.run(BankUIApplication.class, args);
     }
 
-    @Bean
-    @LoadBalanced
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
-    }
 
 }

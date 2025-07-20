@@ -4,7 +4,6 @@ import com.dianatuman.practicum.bank.dto.AccountDTO;
 import com.dianatuman.practicum.bank.dto.TransferDTO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -17,9 +16,6 @@ import org.springframework.web.client.RestTemplate;
 public class TransferService {
 
     private final RestTemplate restTemplate;
-
-    @Value("${bank-services.gateway-api}")
-    private String gatewayURL;
 
     public TransferService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
@@ -37,7 +33,7 @@ public class TransferService {
 
         var jsonTransferDTO = mapper.writeValueAsString(transferDTO);
         try {
-            return restTemplate.postForObject(gatewayURL + "/transfer",
+            return restTemplate.postForObject("/transfer",
                     new HttpEntity<>(jsonTransferDTO, httpHeaders), String.class);
         } catch (Throwable e) {
             return "Transfer service is not working. Please try later.";

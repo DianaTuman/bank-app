@@ -10,6 +10,12 @@ spring:
       port: 8500                # Порт Consul-агента (по умолчанию 8500)
       config:
         enabled: false
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8070/realms/master
+
 resilience4j.circuitbreaker:
   instances:
     exampleCircuitBreaker:
@@ -19,8 +25,3 @@ resilience4j.circuitbreaker:
       waitDurationInOpenState: 10s
       permittedNumberOfCallsInHalfOpenState: 3
       minimumNumberOfCalls: 5
-#  security:
-#    oauth2:
-#      resourceserver:
-#        jwt:
-#          issuer-uri: http://localhost:8082/realms/master
