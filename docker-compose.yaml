@@ -16,6 +16,7 @@ services:
       - consul
       #      - keycloak
       - accounts
+      - gateway-api
     environment:
       - 'SPRING_CLOUD_CONSUL_HOST=http://consul'
   #      - 'SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_TOKEN_URI=http://keycloak:8080/realms/master/protocol/openid-connect/token'
@@ -101,6 +102,14 @@ services:
     environment:
       - 'SPRING_CLOUD_CONSUL_HOST=http://consul'
 
+  gateway-api:
+    build:
+      context: ./gateway-api
+      dockerfile: Dockerfile
+    environment:
+      - 'SPRING_CLOUD_CONSUL_HOST=http://consul'
+#      - 'SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI=http://keycloak:8080/realms/master'
+#
 #  keycloak:
 #    image: 'quay.io/keycloak/keycloak:26.2.5'
 #    command:

@@ -6,7 +6,7 @@ import com.dianatuman.practicum.accounts.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("users/{login}")
+@RequestMapping("accounts/users/{login}")
 public class UserController {
 
     private final UserService userService;

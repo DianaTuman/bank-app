@@ -10,6 +10,7 @@ import com.dianatuman.practicum.accounts.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -51,9 +52,11 @@ public class UserService {
             var user = byId.get();
             if (userDTO.getName() != null || !user.getName().isEmpty()) {
                 user.setName(userDTO.getName());
+                userRepository.save(user);
             }
             if (userDTO.getBirthdate() != null) {
                 user.setBirthdate(userDTO.getBirthdate());
+                userRepository.save(user);
             }
             if (userDTO.getAccounts() != null) {
                 var accounts = user.getAccounts().stream().map(accountMapper::toDTO).toList();

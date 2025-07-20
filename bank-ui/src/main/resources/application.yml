@@ -12,3 +12,6 @@ spring:
         enabled: true            # Включаем Consul Config для внешней конфигурации
         prefix: config          # Префикс в KV-хранилище Consul (по умолчанию "config")
         defaultContext: application  # Контекст по умолчанию
+
+bank-services:
+  gateway-api: http://gateway-api

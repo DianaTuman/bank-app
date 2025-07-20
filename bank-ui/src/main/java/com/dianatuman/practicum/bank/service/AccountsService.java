@@ -30,8 +30,8 @@ public class AccountsService implements UserDetailsService {
 
     private final PasswordEncoder passwordEncoder;
 
-    @Value("${bank-services.accounts}")
-    private String accountsServiceURL;
+    @Value("${bank-services.gateway-api}")
+    private String gatewayURL;
     HttpHeaders httpHeaders = new HttpHeaders();
     ObjectMapper mapper = new ObjectMapper();
 
@@ -44,7 +44,7 @@ public class AccountsService implements UserDetailsService {
     @Override
     public UserPasswordDTO loadUserByUsername(String username) throws UsernameNotFoundException {
         UserPasswordDTO userPasswordDTO = restTemplate
-                .getForObject(accountsServiceURL + "/users/" + username, UserPasswordDTO.class);
+                .getForObject(gatewayURL + "/accounts/users/" + username, UserPasswordDTO.class);
         String username1 = userPasswordDTO.getUsername();
         if (username1 == null || username1.isEmpty()) {
             throw new UsernameNotFoundException("User with login " + username + " wasn't found.");
@@ -54,7 +54,7 @@ public class AccountsService implements UserDetailsService {
     }
 
     public List<UserDTO> getAllUsers() {
-        return restTemplate.getForObject(accountsServiceURL + "/users", UsersListDTO.class).getUserDTOS();
+        return restTemplate.getForObject(gatewayURL + "/accounts/users", UsersListDTO.class).getUserDTOS();
     }
 
     public String registerUser(String login, String password, String name, LocalDate birthdate)
@@ -62,9 +62,9 @@ public class AccountsService implements UserDetailsService {
         String result = "";
         var jsonUserDTO = mapper.writeValueAsString(
                 new RegisterUserDTO(login, name, passwordEncoder.encode(password),
-                        birthdate.atStartOfDay(ZoneId.systemDefault()).toEpochSecond()));
+                        birthdate.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()));
         try {
-            restTemplate.postForEntity(accountsServiceURL + "/users",
+            restTemplate.postForEntity(gatewayURL + "/accounts/users",
                     new HttpEntity<>(jsonUserDTO, httpHeaders), String.class);
         } catch (HttpServerErrorException errorException) {
             result = "User with this login already exists!";
@@ -76,14 +76,14 @@ public class AccountsService implements UserDetailsService {
     }
 
     public UserDTO getUserByLogin(String login) {
-        return restTemplate.getForObject(accountsServiceURL + "/users/" + login + "/info", UserDTO.class);
+        return restTemplate.getForObject(gatewayURL + "/accounts/users/" + login + "/info", UserDTO.class);
     }
 
     public String editPassword(String login, String password) throws JsonProcessingException {
         String result = "";
         var jsonUserDTO = mapper.writeValueAsString(new UserPasswordDTO(login, passwordEncoder.encode(password)));
         try {
-            restTemplate.put(accountsServiceURL + "/users/" + login + "/password",
+            restTemplate.put(gatewayURL + "/accounts/users/" + login + "/password",
                     new HttpEntity<>(jsonUserDTO, httpHeaders));
         } catch (Throwable e) {
             log.error(e.getMessage());
@@ -95,7 +95,7 @@ public class AccountsService implements UserDetailsService {
     public String editUserAccounts(String login, String name, LocalDate birthdate, String[] accounts) throws JsonProcessingException {
         Long epochSecond = null;
         if (birthdate != null) {
-            epochSecond = birthdate.atStartOfDay(ZoneId.systemDefault()).toEpochSecond();
+            epochSecond = birthdate.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli();
         }
         List<AccountDTO> list = List.of();
         if (accounts != null) {
@@ -104,7 +104,7 @@ public class AccountsService implements UserDetailsService {
         var jsonUserDTO = mapper.writeValueAsString(
                 new UserDTO(login, name, epochSecond, list));
         try {
-            return restTemplate.postForObject(accountsServiceURL + "/users/" + login,
+            return restTemplate.postForObject(gatewayURL + "/accounts/users/" + login,
                     new HttpEntity<>(jsonUserDTO, httpHeaders), String.class);
         } catch (Throwable e) {
             return "Internal problems with the user service. Please try later.";

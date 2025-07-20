@@ -18,8 +18,8 @@ public class CashService {
 
     private final RestTemplate restTemplate;
 
-    @Value("${bank-services.cash}")
-    private String cashServiceURL;
+    @Value("${bank-services.gateway-api}")
+    private String gatewayURL;
 
     public CashService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
@@ -41,7 +41,7 @@ public class CashService {
 
         var jsonCashDTO = mapper.writeValueAsString(cashDTO);
         try {
-            return restTemplate.postForObject(cashServiceURL + "/cash",
+            return restTemplate.postForObject(gatewayURL + "/cash",
                     new HttpEntity<>(jsonCashDTO, httpHeaders), String.class);
         } catch (Throwable e) {
             return "Cash service is not working. Please try later.";

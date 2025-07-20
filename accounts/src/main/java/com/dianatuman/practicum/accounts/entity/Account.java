@@ -46,7 +46,7 @@ public class Account {
         if (value == null) {
             value = 0.0f;
         }
-        if (value + cashSum > 0) {
+        if (value + cashSum >= 0) {
             value += cashSum;
             return true;
         } else {

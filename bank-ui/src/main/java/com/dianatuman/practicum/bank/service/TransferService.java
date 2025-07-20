@@ -18,8 +18,8 @@ public class TransferService {
 
     private final RestTemplate restTemplate;
 
-    @Value("${bank-services.transfer}")
-    private String transferServiceURL;
+    @Value("${bank-services.gateway-api}")
+    private String gatewayURL;
 
     public TransferService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
@@ -37,7 +37,7 @@ public class TransferService {
 
         var jsonTransferDTO = mapper.writeValueAsString(transferDTO);
         try {
-            return restTemplate.postForObject(transferServiceURL + "/transfer",
+            return restTemplate.postForObject(gatewayURL + "/transfer",
                     new HttpEntity<>(jsonTransferDTO, httpHeaders), String.class);
         } catch (Throwable e) {
             return "Transfer service is not working. Please try later.";

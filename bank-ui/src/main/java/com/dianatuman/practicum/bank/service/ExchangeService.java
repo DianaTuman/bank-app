@@ -15,15 +15,15 @@ public class ExchangeService {
 
     private final RestTemplate restTemplate;
 
-    @Value("${bank-services.exchange}")
-    private String exchangeServiceURL;
+    @Value("${bank-services.gateway-api}")
+    private String gatewayURL;
 
     public ExchangeService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
     public List<CurrencyDTO> getRates() {
-        RatesDTO ratesDTO = restTemplate.getForObject(exchangeServiceURL + "/exchange/rates", RatesDTO.class);
+        RatesDTO ratesDTO = restTemplate.getForObject(gatewayURL + "/exchange/rates", RatesDTO.class);
         return ratesDTO.getCurrencyDTOS();
     }
 }
