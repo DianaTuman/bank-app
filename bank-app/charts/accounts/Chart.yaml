@@ -1,0 +1,11 @@
+apiVersion: v2
+name: accounts
+description: A Helm chart for Accounts Service
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+dependencies:
+  - name: postgresql
+    version: "16.7.21"
+    repository: "https://charts.bitnami.com/bitnami"
+    alias: accounts-db
