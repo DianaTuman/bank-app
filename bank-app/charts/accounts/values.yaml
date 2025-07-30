@@ -3,7 +3,6 @@ replicaCount: 1
 image:
   repository: accounts # Default to local image name
   pullPolicy: IfNotPresent      # Default to IfNotPresent
-  # Overrides the image tag whose default is the chart appVersion.
   tag: "0.0.1-SNAPSHOT"         # Default tag matching build
 
 imagePullSecrets: [ ]
@@ -25,17 +24,6 @@ service:
   type: ClusterIP
   port: 8080
 
-ingress:
-  enabled: true
-  className: "nginx"
-  annotations: { }
-  hosts:
-    - host: customer.test.local # значение по умолчанию, переопределяется при деплое в prod
-      paths:
-        - path: /
-          pathType: Prefix
-  tls: [ ]
-
 resources: { }
 autoscaling:
   enabled: false
@@ -50,12 +38,18 @@ affinity: { }
 
 config:
   database_url: "jdbc:postgresql://postgres-postgresql.{{ .Release.Namespace }}.svc.cluster.local:5432/practicum"
-  database_username: "customer_user"
+  database_username: "my_user"
+  database_password: "changeM3Customer!"
 
 accounts-db:
+  enabled: true
   auth:
     database: practicum
-    username: customer_user
+    username: my_user
     # Use existingSecret or provide password (less secure for production)
     # existingSecret: "{{ .Release.Name }}-customer-db-postgresql" # Name of the secret to use/create
     password: "changeM3Customer!" # Example: Not recommended for production
+  primary:
+    persistence:
+      enabled: true
+      size: 1Gi

@@ -30,8 +30,8 @@ subprojects {
     }
 
     dependencies {
-        implementation 'org.springframework.cloud:spring-cloud-starter-consul-discovery:4.3.0'
-        implementation 'org.springframework.cloud:spring-cloud-starter-consul-config:4.3.0'
+        implementation 'org.springframework.cloud:spring-cloud-starter-kubernetes-fabric8:3.3.0'
+        implementation 'org.springframework.cloud:spring-cloud-starter-kubernetes-fabric8-config:3.3.0'
         implementation 'org.springframework.boot:spring-boot-starter-actuator'
         compileOnly 'org.projectlombok:lombok'
         annotationProcessor 'org.projectlombok:lombok'

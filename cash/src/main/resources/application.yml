@@ -3,15 +3,13 @@ server:
 
 spring:
   config:
-    import: "consul:"
+    import: "kubernetes:"
   application:
     name: cash-service            # Имя сервиса в реестре Consul
 
   cloud:
-    consul:
-      host: localhost           # Адрес Consul-агента (по умолчанию localhost)
-      port: 8500                # Порт Consul-агента (по умолчанию 8500)
+    kubernetes:
       config:
-        enabled: true            # Включаем Consul Config для внешней конфигурации
-        prefix: config          # Префикс в KV-хранилище Consul (по умолчанию "config")
-        defaultContext: application  # Контекст по умолчанию
+        namespace: bank-ns
+        sources:
+          - name: exchange-application
