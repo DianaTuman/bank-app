@@ -1,0 +1,25 @@
+global:
+  domain: myapp.local # Example domain for ingress
+
+
+accounts-db:
+  enabled: true
+  auth:
+    database: practicum
+    username: accounts_user
+    password: "changeM3Customer!" # Example: Not recommended for production
+  primary:
+    persistence:
+      enabled: true
+      size: 1Gi
+
+bank-keycloak:
+  volumes:
+    - ./keycloak/:/opt/bitnami/keycloak/data/import
+  extraEnvVars:
+    - name: KC_BOOTSTRAP_ADMIN_USERNAME
+      value: admin
+    - name: KC_BOOTSTRAP_ADMIN_PASSWORD
+      value: admin
+    - name: KEYCLOAK_EXTRA_ARGS
+      value: --import-realm

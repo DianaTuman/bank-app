@@ -9,7 +9,7 @@ spring:
 
   cloud:
     kubernetes:
+      discovery:
+        enabled: true
       config:
-        namespace: bank-ns
-        sources:
-          - name: exchange-application
+        enabled: true

@@ -2,9 +2,9 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ include "exchange-generator.fullname" . }}
+  name: {{ include "exchange-generator-service.fullname" . }}
   labels:
-    {{- include "exchange-generator.labels" . | nindent 4 }}
+    {{- include "exchange-generator-service.labels" . | nindent 4 }}
   {{- with .Values.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
@@ -35,7 +35,7 @@ spec:
             {{- end }}
             backend:
               service:
-                name: {{ include "exchange-generator.fullname" $ }}
+                name: {{ include "exchange-generator-service.fullname" $ }}
                 port:
                   number: {{ $.Values.service.port }}
           {{- end }}

@@ -1,5 +1,5 @@
 apiVersion: v2
-name: transfer
+name: transfer-service
 description: A Helm chart for Transfer service.
 type: application
 version: 0.1.0

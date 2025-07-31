@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "exchange-generator.fullname" . }}
+  name: {{ include "exchange-generator-service.fullname" . }}
   labels:
-    {{- include "exchange-generator.labels" . | nindent 4 }}
+    {{- include "exchange-generator-service.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "exchange-generator.selectorLabels" . | nindent 6 }}
+      {{- include "exchange-generator-service.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -18,7 +18,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "exchange-generator.labels" . | nindent 8 }}
+        {{- include "exchange-generator-service.labels" . | nindent 8 }}
         {{- with .Values.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -27,7 +27,7 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "exchange-generator.serviceAccountName" . }}
+      serviceAccountName: {{ include "exchange-generator-service.serviceAccountName" . }}
       {{- with .Values.podSecurityContext }}
       securityContext:
         {{- toYaml . | nindent 8 }}

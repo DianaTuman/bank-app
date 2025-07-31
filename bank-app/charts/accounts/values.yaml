@@ -1,7 +1,7 @@
 replicaCount: 1
 
 image:
-  repository: accounts # Default to local image name
+  repository: accounts-service # Default to local image name
   pullPolicy: IfNotPresent      # Default to IfNotPresent
   tag: "0.0.1-SNAPSHOT"         # Default tag matching build
 
@@ -13,23 +13,46 @@ serviceAccount:
   create: true
   automount: true
   annotations: { }
-  name: "accounts-service"
+  name: ""
 
 podAnnotations: { }
 
 podSecurityContext: { }
 
 securityContext: { }
+
 service:
-  type: ClusterIP
-  port: 8080
+  type: LoadBalancer
+  port: 8081
+
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations: { }
+  hosts:
+    - host: accounts-service.myapp.local
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: [ ]
 
 resources: { }
+
+livenessProbe:
+  httpGet:
+    path: /actuator/health/liveness
+    port: http
+readinessProbe:
+  httpGet:
+    path: /actuator/health/readiness
+    port: http
+
 autoscaling:
   enabled: false
   minReplicas: 1
   maxReplicas: 100
   targetCPUUtilizationPercentage: 80
+
 nodeSelector: { }
 
 tolerations: [ ]
@@ -37,19 +60,6 @@ tolerations: [ ]
 affinity: { }
 
 config:
-  database_url: "jdbc:postgresql://postgres-postgresql.{{ .Release.Namespace }}.svc.cluster.local:5432/practicum"
-  database_username: "my_user"
-  database_password: "changeM3Customer!"
-
-accounts-db:
-  enabled: true
-  auth:
-    database: practicum
-    username: my_user
-    # Use existingSecret or provide password (less secure for production)
-    # existingSecret: "{{ .Release.Name }}-customer-db-postgresql" # Name of the secret to use/create
-    password: "changeM3Customer!" # Example: Not recommended for production
-  primary:
-    persistence:
-      enabled: true
-      size: 1Gi
+  database_url: "jdbc:postgresql://{{ .Release.Name }}-accounts-db:5432/practicum"
+  database_username: "accounts_user"
+  database_password: "changeM3Customer!" # Example: Not recommended for production
