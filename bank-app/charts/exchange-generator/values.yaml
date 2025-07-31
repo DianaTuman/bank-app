@@ -11,10 +11,8 @@ nameOverride: ""
 fullnameOverride: ""
 
 serviceAccount:
-  create: true
-  automount: true
-  annotations: { }
-  name: ""
+  create: false
+  name: common-service-account
 
 podAnnotations: { }
 podLabels: { }

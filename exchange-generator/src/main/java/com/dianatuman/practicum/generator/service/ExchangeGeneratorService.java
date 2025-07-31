@@ -5,6 +5,7 @@ import com.dianatuman.practicum.generator.dto.RatesDTO;
 import com.dianatuman.practicum.generator.enums.BankCurrency;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpEntity;
@@ -18,13 +19,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+@Slf4j
 @Service
 @RefreshScope
 public class ExchangeGeneratorService {
 
     private final RestTemplate restTemplate;
 
-    @Value("${bank-services.exchange}")
+    @Value("${exchange_service_url}")
     private String exchangeServiceURL;
 
     public ExchangeGeneratorService(RestTemplate restTemplate) {
@@ -44,7 +46,7 @@ public class ExchangeGeneratorService {
         ObjectMapper mapper = new ObjectMapper();
         var json = mapper.writeValueAsString(new RatesDTO(currencyDTOS));
         HttpEntity<String> request = new HttpEntity<>(json, httpHeaders);
-
+        log.info(exchangeServiceURL + "/exchange/rates");
         restTemplate.postForObject(exchangeServiceURL + "/exchange/rates", request, Boolean.class);
     }
 }

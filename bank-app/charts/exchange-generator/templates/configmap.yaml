@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: exchange-generator-service
+data:
+  application.properties: |
+    exchange_service_url={{ .Values.global.exchangeServiceURL }}

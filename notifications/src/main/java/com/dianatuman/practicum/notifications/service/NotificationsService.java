@@ -7,7 +7,7 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class NotificationsService {
 
-    @Value("${bank-services.bank-ui}")
+    @Value("${bank_ui_url}")
     private String bankUIURL;
 
     private final RestTemplate restTemplate;

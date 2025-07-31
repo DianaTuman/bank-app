@@ -16,7 +16,7 @@ import org.springframework.web.util.DefaultUriBuilderFactory;
 @Configuration
 public class GatewayAPIConfiguration {
 
-    @Value("${bank-services.gateway-api}")
+    @Value("${gateway_api_url}")
     private String gatewayURL;
 
     @Bean

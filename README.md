@@ -15,6 +15,14 @@ To activate blocker feature try to cash or transfer using number 666.
 ### **To run this application with K8s and Helm:**
 
 1. **gradle clean buildAll** command to create jars
-2. .\build_images.sh
+2. **.\build_images.sh**
+
+Commands for minikube:
+minikube start --vm-driver=hyperv
+minikube docker-env | Invoke-Expression
+minikube addons enable ingress
+minikube tunnel
+minikube service list
+kubectl create configmap keycloak-realm-config --from-file=realm-export.json
 
 ### **To deploy this application with Jenkins please read README-JENKINS.md**

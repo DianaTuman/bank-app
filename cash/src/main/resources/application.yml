@@ -5,7 +5,7 @@ spring:
   config:
     import: "kubernetes:"
   application:
-    name: cash-service            # Имя сервиса в реестре Consul
+    name: cash-service
 
   cloud:
     kubernetes:
