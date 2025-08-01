@@ -1,13 +1,5 @@
 global:
   domain: myapp.local # Example domain for ingress
-  accountsServiceURL: "http://exchange-service:8084"
-  blockerServiceURL: "http://exchange-service:8084"
-  exchangeServiceURL: "http://exchange-service.myapp.local"
-  notificationServiceURL: "http://exchange-service:8084"
-  bankUIURL: "http://exchange-service:8084"
-  gatewayURL: "http://exchange-service:8084"
-  cashServiceURL: "http://exchange-service:8084"
-  transferServiceURL: "http://exchange-service:8084"
 
 accounts-db:
   enabled: true
@@ -21,20 +13,30 @@ accounts-db:
       size: 1Gi
 
 bank-keycloak:
-  command:
-    - "/opt/bitnami/keycloak/bin/kc.sh"
-    - "start-dev"
+  auth:
+    adminUser: admin
+    adminPassword: admin
+
+  postgresql:
+    enabled: true
+    auth:
+      username: bn_keycloak
+      password: bn_keycloak
+      database: bitnami_keycloak
+
   extraEnvVars:
-    - name: KC_BOOTSTRAP_ADMIN_USERNAME
+    - name: KEYCLOAK_ADMIN
       value: admin
-    - name: KC_BOOTSTRAP_ADMIN_PASSWORD
+    - name: KEYCLOAK_ADMIN_PASSWORD
       value: admin
     - name: KEYCLOAK_EXTRA_ARGS
       value: "--import-realm"
+
   extraVolumes:
     - name: realm-config
       configMap:
         name: keycloak-realm-config
+
   extraVolumeMounts:
     - name: realm-config
       mountPath: /opt/bitnami/keycloak/data/import

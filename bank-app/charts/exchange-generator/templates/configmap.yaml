@@ -4,4 +4,4 @@ metadata:
   name: exchange-generator-service
 data:
   application.properties: |
-    exchange_service_url={{ .Values.global.exchangeServiceURL }}
+    exchange_service_url={{ include "bank.exchangeServiceURL" . }}

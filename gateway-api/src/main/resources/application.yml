@@ -2,6 +2,8 @@ server:
   port: 8090
 
 spring:
+  config:
+    import: "kubernetes:"
   application:
     name: gateway-api
   cloud:
@@ -9,7 +11,7 @@ spring:
       discovery:
         enabled: true
       config:
-        enabled: false
+        enabled: true
   security:
     oauth2:
       resourceserver:

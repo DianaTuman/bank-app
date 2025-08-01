@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: notifications-service
+data:
+  application.properties: |
+    bank_ui_url={{ include "bank.bankUiURL" . }}

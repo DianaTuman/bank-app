@@ -38,6 +38,6 @@ dependencies:
     version: "0.1.0"
     repository: "file://charts/transfer"
   - name: keycloak
-    version: "24.8.1"
-    repository: "https://charts.bitnami.com/bitnami"
+    version: 24.8.1
+    repository: https://charts.bitnami.com/bitnami
     alias: bank-keycloak
