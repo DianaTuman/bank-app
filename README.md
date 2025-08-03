@@ -2,7 +2,8 @@
 
 Bank-like application created using Spring Boot. Homework for the Java developer training course.
 The application will start at **localhost:8080**.
-To activate blocker feature try to cash or transfer using number 666.
+To register a user go to **/signup** page.
+To activate blocker feature try to cash or transfer using number 666. 
 
 ### Versions of software used in the development:
 
@@ -14,18 +15,12 @@ To activate blocker feature try to cash or transfer using number 666.
 
 ### **To run this application with K8s and Helm:**
 
-You must have working K8s and Helm. K8s should be able to work with Ingress.
+You must have working K8s and Helm. K8s should be able to work with Ingress and with local Docker registry.
 
-1. **gradle clean buildAll** command to create jars
-2. **.\build_images.sh** command to build local Docker images 
-3. helm dependency build ./bank-app 
-4. helm install bank-app ./bank-app
+1. **gradle clean buildAll** to create jars
+2. **.\build_images.sh** to build local Docker images
+3. **.\deploy_with_helm.sh** to deploy app with Helm
 
-Commands for minikube:
-minikube start --vm-driver=hyperv --disk-size=40g
-minikube docker-env | Invoke-Expression
-minikube addons enable ingress
-minikube tunnel
-minikube service list
+The application will start at **localhost:8080**.
 
 ### **To deploy this application with Jenkins please read README-JENKINS.md**

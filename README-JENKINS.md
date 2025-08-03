@@ -44,7 +44,7 @@
 
 ```bash
 git init
-git remote add origin https://github.com/<your-username>/YandexHelmApp.git
+git remote add origin https://github.com/<your-username>/bank-app.git
 git add .
 git commit -m "Initial commit"
 git push -u origin master
@@ -70,7 +70,7 @@ cp ~/.kube/config jenkins_kubeconfig.yaml
 server: https://host.docker.internal:6443
 ```
 
-**Добавьте:**
+**Добавьте сразу после server:**
 
 ```yaml
 insecure-skip-tls-verify: true
@@ -110,7 +110,7 @@ GHCR_TOKEN=ghp_...
 
 # Docker registry (в данном случае GHCR)
 DOCKER_REGISTRY=ghcr.io/your-username
-GITHUB_REPOSITORY=your-username/YandexHelmApp
+GITHUB_REPOSITORY=your-username/bank-app
 
 # Пароль к базе данных PostgreSQL
 DB_PASSWORD=your-db-password
@@ -179,7 +179,7 @@ curl -s http://order.prod.local/actuator/health
 
 ## Завершение работы и очистка
 
-Если вы хотите полностью остановить Jenkins, удалить namespace'ы `test` и `prod`, а также все установленные ресурсы, используйте скрипт `nuke-all.sh`.
+Если вы хотите полностью остановить Jenkins, удалить все установленные ресурсы, используйте скрипт `nuke-all.sh`.
 
 Он находится в папке `jenkins`:
 
