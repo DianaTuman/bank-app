@@ -24,7 +24,7 @@ public class CashService {
     @Value("${blocker_service_url}")
     private String blockerServiceURL;
     @Value("${notification_service_url}")
-    private String notificationServiceURL;
+    private String notificationsServiceURL;
 
     public CashService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
@@ -47,8 +47,8 @@ public class CashService {
                 String s = restTemplate.postForObject(accountsServiceURL + "/accounts/cash",
                         new HttpEntity<>(jsonCashDTO, httpHeaders), String.class);
                 if (Objects.equals(s, "OK")) {
-                    log.info(blockerServiceURL + notificationServiceURL + "/notifications/cash");
-                    restTemplate.postForLocation(notificationServiceURL + "/notifications/cash", cashDTO);
+                    log.info(notificationsServiceURL + "/notifications/cash");
+                    restTemplate.postForLocation(notificationsServiceURL + "/notifications/cash", cashDTO);
                 }
                 return s;
             } catch (Throwable e) {

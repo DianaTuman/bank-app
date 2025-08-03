@@ -8,4 +8,4 @@ data:
     cash_service_url={{ include "bank.cashServiceURL" . }}
     transfer_service_url={{ include "bank.transferServiceURL" . }}
     exchange_service_url={{ include "bank.exchangeServiceURL" . }}
-    spring.security.oauth2.resourceserver.jwt.issuer-uri=http://bank-app-bank-keycloak:8080/realms/master
+    spring.security.oauth2.resourceserver.jwt.issuer-uri=http://bank-app-bank-keycloak/realms/master

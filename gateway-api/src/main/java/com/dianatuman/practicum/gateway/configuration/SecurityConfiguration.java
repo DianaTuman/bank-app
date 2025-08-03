@@ -15,9 +15,11 @@ public class SecurityConfiguration {
     SecurityWebFilterChain securityFilterChain(ServerHttpSecurity security) {
         return security
                 .authorizeExchange(requests -> requests
+                        .pathMatchers("/actuator/**").permitAll()
                         .anyExchange().authenticated())
                 .oauth2ResourceServer(serverSpec -> serverSpec
                         .jwt(Customizer.withDefaults()))
+                .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .build();
     }
 }

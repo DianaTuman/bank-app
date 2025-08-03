@@ -5,13 +5,7 @@ metadata:
 data:
   application.properties: |
     gateway_api_url={{ include "bank.gatewayApiURL" . }}
-    spring.security.oauth2.client.provider.keycloak.token-uri=http://bank-app-bank-keycloak:8070/realms/master/protocol/openid-connect/token
-    spring.security.oauth2.client.provider.keycloak.jwk-set-uri=http://bank-app-bank-keycloak:8070/realms/master/protocol/openid-connect/certs
-    spring.security.oauth2.client.provider.keycloak.user-info-uri=http://bank-app-bank-keycloak:8070/realms/master/protocol/openid-connect/userinfo
-    spring.security.oauth2.client.provider.keycloak.authorization-uri=http://bank-app-bank-keycloak:8070/realms/master/protocol/openid-connect/auth
-    
-
-#      - 'SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_TOKEN_URI=http://keycloak:8080/realms/master/protocol/openid-connect/token'
-#      - 'SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_JWk_SET_URI=http://keycloak:8080/realms/master/protocol/openid-connect/certs'
-#      - 'SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_USER_INFO_URI=http://keycloak:8080/realms/master/protocol/openid-connect/userinfo'
-#      - 'SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_AUTHORIZATION_URI=http://keycloak:8080/realms/master/protocol/openid-connect/auth'
+    spring.security.oauth2.client.provider.keycloak.token-uri=http://bank-app-bank-keycloak/realms/master/protocol/openid-connect/token
+    spring.security.oauth2.client.provider.keycloak.jwk-set-uri=http://bank-app-bank-keycloak/realms/master/protocol/openid-connect/certs
+    spring.security.oauth2.client.provider.keycloak.user-info-uri=http://bank-app-bank-keycloak/realms/master/protocol/openid-connect/userinfo
+    spring.security.oauth2.client.provider.keycloak.authorization-uri=http://bank-app-bank-keycloak/realms/master/protocol/openid-connect/auth

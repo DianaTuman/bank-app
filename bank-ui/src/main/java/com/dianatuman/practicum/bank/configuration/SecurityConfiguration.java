@@ -2,10 +2,12 @@ package com.dianatuman.practicum.bank.configuration;
 
 import com.dianatuman.practicum.bank.dto.UserPasswordDTO;
 import com.dianatuman.practicum.bank.service.AccountsService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,10 +16,8 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.AuthenticationFilter;
-import org.springframework.security.web.authentication.www.BasicAuthenticationConverter;
 
-
+@Slf4j
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
@@ -31,19 +31,16 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
-
-        AuthenticationFilter authFilter = new AuthenticationFilter(authenticationManager,
-                new BasicAuthenticationConverter());
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        log.info("Initializing SecurityFilterChain");
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/signup").permitAll()
-                        .requestMatchers("/api/notification").permitAll()
+                        .requestMatchers("/signup", "/api/notification", "/actuator/**").permitAll()
                         .anyRequest().authenticated()
                 )
-                .addFilterAt(authFilter, AuthenticationFilter.class)
-                .anonymous(anonymous -> anonymous.principal("guestUser"))
+                .httpBasic(Customizer.withDefaults()) // Enables built-in Basic Auth
                 .formLogin(Customizer.withDefaults())
+                .anonymous(anon -> anon.principal("guestUser"))
                 .csrf(AbstractHttpConfigurer::disable)
                 .logout(Customizer.withDefaults());
 
@@ -55,13 +52,18 @@ public class SecurityConfiguration {
         return authentication -> {
             final String username = authentication.getPrincipal().toString();
             final CharSequence rawPassword = authentication.getCredentials().toString();
+
             UserPasswordDTO user = accountsService.loadUserByUsername(username);
+
             if (passwordEncoder().matches(rawPassword, user.getPassword())) {
-                return new UsernamePasswordAuthenticationToken(username, user.getPassword(), user.getAuthorities());
+                return new UsernamePasswordAuthenticationToken(
+                        username,
+                        user.getPassword(),
+                        user.getAuthorities()
+                );
             } else {
-                return new UsernamePasswordAuthenticationToken(username, authentication.getCredentials());
+                throw new BadCredentialsException("Invalid username or password");
             }
         };
     }
-
 }

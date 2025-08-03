@@ -1,5 +1,6 @@
 package com.dianatuman.practicum.gateway.configuration;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
@@ -7,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+@Slf4j
 public class RouteConfiguration {
 
     @Value("${accounts_service_url}")
@@ -20,6 +22,10 @@ public class RouteConfiguration {
 
     @Bean
     public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
+        log.info(accountsServiceURL);
+        log.info(cashServiceURL);
+        log.info(transferServiceURL);
+        log.info(exchangeServiceURL);
         return builder.routes()
                 .route("accounts_route", r -> r
                         .path("/accounts/**")

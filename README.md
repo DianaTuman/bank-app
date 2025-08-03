@@ -22,7 +22,7 @@ You must have working K8s and Helm. K8s should be able to work with Ingress.
 4. helm install bank-app ./bank-app
 
 Commands for minikube:
-minikube start --vm-driver=hyperv
+minikube start --vm-driver=hyperv --disk-size=40g
 minikube docker-env | Invoke-Expression
 minikube addons enable ingress
 minikube tunnel

@@ -25,7 +25,7 @@ public class TransferService {
     @Value("${blocker_service_url}")
     private String blockerServiceURL;
     @Value("${notification_service_url}")
-    private String notificationServiceURL;
+    private String notificationsServiceURL;
     @Value("${exchange_service_url}")
     private String exchangeServiceURL;
 
@@ -61,8 +61,8 @@ public class TransferService {
                 String s = restTemplate.postForObject(accountsServiceURL + "/accounts/transfer",
                         new HttpEntity<>(jsonTransferDTO, httpHeaders), String.class);
                 if (Objects.equals(s, "OK")) {
-                    log.info(blockerServiceURL + notificationServiceURL + "/notifications/transfer");
-                    restTemplate.postForLocation(notificationServiceURL + "/notifications/transfer", transferDTO);
+                    log.info(blockerServiceURL + notificationsServiceURL + "/notifications/transfer");
+                    restTemplate.postForLocation(notificationsServiceURL + "/notifications/transfer", transferDTO);
                 }
                 return s;
             } catch (Throwable e) {
