@@ -76,6 +76,14 @@ server: https://host.docker.internal:6443
 insecure-skip-tls-verify: true
 ```
 
+```yaml
+clusters:
+   - cluster:
+        server: https://host.docker.internal:6443
+        insecure-skip-tls-verify: true
+     name: docker-desktop
+```
+
 Это нужно, чтобы Jenkins внутри контейнера смог обратиться к вашему локальному кластеру и проигнорировал самоподписанные сертификаты.
 
 ---
@@ -95,26 +103,9 @@ helm upgrade --install ingress-nginx ingress-nginx/ingress-nginx   --namespace i
 
 ---
 
-### 5. Создайте `.env` файл
+### 5. Обновите `.env` файл
 
-Создайте файл `.env` в корне проекта:
-
-```env
-# Путь до локального kubeconfig-файла
-KUBECONFIG_PATH=/Users/username/.kube/jenkins_kubeconfig.yaml
-
-# Параметры для GHCR
-GITHUB_USERNAME=your-username
-GITHUB_TOKEN=ghp_...
-GHCR_TOKEN=ghp_...
-
-# Docker registry (в данном случае GHCR)
-DOCKER_REGISTRY=ghcr.io/your-username
-GITHUB_REPOSITORY=your-username/bank-app
-
-# Пароль к базе данных PostgreSQL
-DB_PASSWORD=your-db-password
-```
+Обновите файл `.env` в директории jenkins своими значениями:
 
 > Убедитесь, что ваш GitHub Token имеет права `write:packages`, `read:packages` и `repo`.
 
@@ -134,46 +125,17 @@ Jenkins будет доступен по адресу: [http://localhost:8080](h
 ## Как использовать
 
 1. Откройте Jenkins: [http://localhost:8080](http://localhost:8080)
-2. Перейдите в задачу `Bank-App` → `Build Now`
+2. Перейдите в задачу `Bank-App` → `main` → `Build Now`
 3. Jenkins выполнит:
     - сборку и тесты
     - сборку Docker-образов
     - публикацию образов в GHCR
-    - деплой в Kubernetes в два namespace: `test` и `prod`
 
 ---
 
 ## Проверка успешного деплоя
 
-### 1. Добавьте записи в `/etc/hosts`
-
-```bash
-sudo nano /etc/hosts
-```
-
-Добавьте:
-
-```text
-127.0.0.1 customer.test.local
-127.0.0.1 order.test.local
-127.0.0.1 customer.prod.local
-127.0.0.1 order.prod.local
-```
-
-### 2. Отправьте запросы на `/actuator/health`
-
-```bash
-curl -s http://customer.test.local/actuator/health
-curl -s http://order.test.local/actuator/health
-curl -s http://customer.prod.local/actuator/health
-curl -s http://order.prod.local/actuator/health
-```
-
-**Ожидаемый ответ:**
-
-```json
-{"status":"UP","groups":["liveness","readiness"]}
-```
+Приложение будет доступен по адресу: [http://localhost:8088](http://localhost:8088)
 
 ---
 

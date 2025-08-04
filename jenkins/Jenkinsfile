@@ -13,29 +13,58 @@ pipeline {
      stages {
             stage('Gradle Build') {
                 steps {
-                    echo 'Running Gradle clean buildAll...'
+                    sh 'chmod +x ./gradlew'
                     sh './gradlew clean buildAll'
                 }
             }
 
             stage('Build Docker Images') {
-                steps {
-                    echo 'Running build_images.sh...'
-                    sh './build_images.sh'
+                sh """
+                    docker build -t ${DOCKER_REGISTRY}/bank-ui:${IMAGE_TAG} bank-ui
+                    docker build -t ${DOCKER_REGISTRY}/accounts-service:${IMAGE_TAG} accounts
+                    docker build -t ${DOCKER_REGISTRY}/blocker-service:${IMAGE_TAG} blocker
+                    docker build -t ${DOCKER_REGISTRY}/cash-service:${IMAGE_TAG} cash
+                    docker build -t ${DOCKER_REGISTRY}/exchange-service:${IMAGE_TAG} exchange
+                    docker build -t ${DOCKER_REGISTRY}/exchange-generator-service:${IMAGE_TAG} exchange-generator
+                    docker build -t ${DOCKER_REGISTRY}/gateway-api:${IMAGE_TAG} gateway-api
+                    docker build -t ${DOCKER_REGISTRY}/notifications-service:${IMAGE_TAG} notifications
+                    docker build -t ${DOCKER_REGISTRY}/transfer-service:${IMAGE_TAG} transfer
+                    """
                 }
             }
 
-            stage('Helm Dependency Build') {
+            stage('Push Docker Images') {
                 steps {
-                    echo 'Running helm dependency build...'
-                    sh 'helm dependency build ./bank-app'
+                    withCredentials([string(credentialsId: 'GHCR_TOKEN', variable: 'GHCR_TOKEN')]) {
+                        sh """
+                        echo \$GHCR_TOKEN | docker login ghcr.io -u ${GITHUB_USERNAME} --password-stdin
+                        docker push ${DOCKER_REGISTRY}/bank-ui:${IMAGE_TAG}
+                        docker push ${DOCKER_REGISTRY}/accounts-service:${IMAGE_TAG}
+                        docker push ${DOCKER_REGISTRY}/blocker-service:${IMAGE_TAG}
+                        docker push ${DOCKER_REGISTRY}/cash-service:${IMAGE_TAG}
+                        docker push ${DOCKER_REGISTRY}/exchange-service:${IMAGE_TAG}
+                        docker push ${DOCKER_REGISTRY}/exchange-generator-service:${IMAGE_TAG}
+                        docker push ${DOCKER_REGISTRY}/gateway-api:${IMAGE_TAG}
+                        docker push ${DOCKER_REGISTRY}/notifications-service:${IMAGE_TAG}
+                        docker push ${DOCKER_REGISTRY}/transfer-service:${IMAGE_TAG}
+                        """
+                    }
                 }
             }
 
-            stage('Helm Install') {
+            stage('Add Helm Repo') {
                 steps {
-                    echo 'Installing bank-app via Helm...'
-                    sh 'helm install bank-app ./bank-app'
+                    sh """
+                    helm repo add bitnami https://charts.bitnami.com/bitnami
+                    helm repo update
+                    """
+                }
+            }
+
+            stage('Helm Deploy') {
+                steps {
+                    chmod +x deploy_with_helm.sh
+                    sh './deploy_with_helm.sh'
                 }
             }
         }

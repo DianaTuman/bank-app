@@ -1,7 +1,7 @@
 # bank-app
 
 Bank-like application created using Spring Boot. Homework for the Java developer training course.
-The application will start at **localhost:8080**.
+The application will start at **localhost:8088**. So it must be free.
 To register a user go to **/signup** page.
 To activate blocker feature try to cash or transfer using number 666. 
 
@@ -21,6 +21,6 @@ You must have working K8s and Helm. K8s should be able to work with Ingress and 
 2. **.\build_images.sh** to build local Docker images
 3. **.\deploy_with_helm.sh** to deploy app with Helm
 
-The application will start at **localhost:8080**.
+The application will start at **localhost:8088**.
 
 ### **To deploy this application with Jenkins please read README-JENKINS.md**
