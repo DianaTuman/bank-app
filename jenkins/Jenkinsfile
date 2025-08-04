@@ -15,14 +15,11 @@ pipeline {
                 }
             }
 
-            stage('Minikube') {
+            stage('Build Images') {
                 steps {
                     sh '''
-                    minikube start --vm-driver=hyperv --disk-size=40g
-                    minikube docker-env | Invoke-Expression
-                    minikube addons enable ingress
                     chmod +x ./build_images.sh
-                    build_images.sh
+                    ./build_images.sh
                     '''
                 }
             }
