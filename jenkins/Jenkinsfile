@@ -75,6 +75,7 @@ pipeline {
                     echo "Building Helm dependencies..."
                     helm dependency build ./bank-app
 
+                    ls -l /root/.kube
                     kubectl config view
                     echo "Installing Helm chart: bank-app..."
                     helm install bank-app ./bank-app
