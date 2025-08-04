@@ -62,12 +62,6 @@ pipeline {
             stage('Helm Deploy') {
                 steps {
                     sh '''
-                    set -e
-                    set -o pipefail
-
-                    echo "Deleting Helm chart if it was installed before"
-                    helm delete bank-app || true
-
                     echo "Building Helm dependencies..."
                     helm dependency build ./bank-app
 
