@@ -16,17 +16,19 @@ pipeline {
             }
 
             stage('Build Docker Images') {
-                sh """
-                    docker build -t ${DOCKER_REGISTRY}/bank-ui:${IMAGE_TAG} bank-ui
-                    docker build -t ${DOCKER_REGISTRY}/accounts-service:${IMAGE_TAG} accounts
-                    docker build -t ${DOCKER_REGISTRY}/blocker-service:${IMAGE_TAG} blocker
-                    docker build -t ${DOCKER_REGISTRY}/cash-service:${IMAGE_TAG} cash
-                    docker build -t ${DOCKER_REGISTRY}/exchange-service:${IMAGE_TAG} exchange
-                    docker build -t ${DOCKER_REGISTRY}/exchange-generator-service:${IMAGE_TAG} exchange-generator
-                    docker build -t ${DOCKER_REGISTRY}/gateway-api:${IMAGE_TAG} gateway-api
-                    docker build -t ${DOCKER_REGISTRY}/notifications-service:${IMAGE_TAG} notifications
-                    docker build -t ${DOCKER_REGISTRY}/transfer-service:${IMAGE_TAG} transfer
-                    """
+                steps {
+                    sh """
+                        docker build -t ${DOCKER_REGISTRY}/bank-ui:${IMAGE_TAG} bank-ui
+                        docker build -t ${DOCKER_REGISTRY}/accounts-service:${IMAGE_TAG} accounts
+                        docker build -t ${DOCKER_REGISTRY}/blocker-service:${IMAGE_TAG} blocker
+                        docker build -t ${DOCKER_REGISTRY}/cash-service:${IMAGE_TAG} cash
+                        docker build -t ${DOCKER_REGISTRY}/exchange-service:${IMAGE_TAG} exchange
+                        docker build -t ${DOCKER_REGISTRY}/exchange-generator-service:${IMAGE_TAG} exchange-generator
+                        docker build -t ${DOCKER_REGISTRY}/gateway-api:${IMAGE_TAG} gateway-api
+                        docker build -t ${DOCKER_REGISTRY}/notifications-service:${IMAGE_TAG} notifications
+                        docker build -t ${DOCKER_REGISTRY}/transfer-service:${IMAGE_TAG} transfer
+                        """
+                }
             }
 
             stage('Push Docker Images') {
