@@ -62,6 +62,11 @@ pipeline {
             stage('Helm Deploy') {
                 steps {
                     sh '''
+                    kubectl get nodes
+                    helm version
+                    kubectl config view
+                    kubectl get all
+
                     echo "Building Helm dependencies..."
                     helm dependency build ./bank-app
 
