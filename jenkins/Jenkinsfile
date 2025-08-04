@@ -27,7 +27,6 @@ pipeline {
                     docker build -t ${DOCKER_REGISTRY}/notifications-service:${IMAGE_TAG} notifications
                     docker build -t ${DOCKER_REGISTRY}/transfer-service:${IMAGE_TAG} transfer
                     """
-                }
             }
 
             stage('Push Docker Images') {
