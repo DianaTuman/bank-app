@@ -3,10 +3,7 @@ pipeline {
 
     environment {
         DOCKER_REGISTRY = credentials('DOCKER_REGISTRY')
-        DB_PASSWORD     = credentials('DB_PASSWORD')
         GITHUB_USERNAME = credentials('GITHUB_USERNAME')
-        DB_NAME         = 'mydb'
-        DB_USER         = 'myuser'
         IMAGE_TAG       = "${env.BUILD_NUMBER}"
     }
 
@@ -63,7 +60,7 @@ pipeline {
 
             stage('Helm Deploy') {
                 steps {
-                    chmod +x deploy_with_helm.sh
+                    sh 'chmod +x deploy_with_helm.sh'
                     sh './deploy_with_helm.sh'
                 }
             }
