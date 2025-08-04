@@ -52,7 +52,7 @@ git push -u origin master
 
 ---
 
-### 3. Создайте файл `jenkins_kubeconfig.yaml`
+### 3. Создайте файл `jenkins_kubeconfig.yaml` в директории jenkins
 
 Jenkins будет использовать этот файл для доступа к Kubernetes.
 
