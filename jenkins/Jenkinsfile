@@ -44,7 +44,7 @@ pipeline {
                     kubectl wait --namespace ingress-nginx \
                     --for=condition=Ready pods \
                     --all \
-                    --timeout=180s
+                    --timeout=300s
                     kubectl get pods -n ingress-nginx
                     kubectl get svc -n ingress-nginx
                     '''
