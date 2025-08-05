@@ -118,7 +118,7 @@ pipeline {
                     set -e
 
                     echo "Applying Ingress resource..."
-                    kubectl apply -f bank-app/charts/bank-ui/templates/ingress.yaml
+                    kubectl apply -f ./jenkins/ingress.yaml
 
                     echo "Waiting for Ingress resource to be ready..."
                     kubectl wait --namespace default \
