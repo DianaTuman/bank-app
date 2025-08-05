@@ -51,10 +51,23 @@ pipeline {
                 }
             }
 
+            stage('Helm Cleanup') {
+                steps {
+                    sh '''#!/bin/bash
+                    set -e
+                    if helm status bank-app >/dev/null 2>&1; then
+                      echo "Deleting existing Helm release: bank-app"
+                      helm delete bank-app
+                    else
+                      echo "No existing Helm release named bank-app"
+                    fi
+                    '''
+                }
+            }
+
             stage('Helm Deploy') {
                 steps {
                     sh '''
-
                     echo "Building Helm dependencies..."
                     helm dependency build ./bank-app
 
