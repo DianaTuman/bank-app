@@ -92,11 +92,8 @@ pipeline {
                     kubectl port-forward pod/"$BANK_UI_POD" 8088:8080 > port-forward.log 2>&1 &
                     PORT_FORWARD_PID=$!
 
-                    # Kill port-forward on exit
-                    trap "echo Killing port-forward process...; kill $PORT_FORWARD_PID" EXIT
-
                     echo "Waiting a few seconds for port-forward to initialize..."
-                    sleep 5
+                    sleep 300
 
                     echo "Opening app in browser at http://localhost:8088..."
                     if command -v xdg-open > /dev/null; then
