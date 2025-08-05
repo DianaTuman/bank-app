@@ -38,17 +38,17 @@ if [ "$READY" != "True" ]; then
   exit 1
 fi
 
-echo "Forwarding port from pod to localhost:8088..."
-kubectl port-forward pod/"$BANK_UI_POD" 8088:8080 &
+echo "Forwarding port from pod to localhost:8080..."
+kubectl port-forward pod/"$BANK_UI_POD" 8080:8080 &
 PORT_FORWARD_PID=$!
 
-echo "Opening app in browser at http://localhost:8088..."
+echo "Opening app in browser at http://localhost:8080..."
 if command -v xdg-open > /dev/null; then
-    xdg-open http://localhost:8088
+    xdg-open http://localhost:8080
 elif command -v open > /dev/null; then
-    open http://localhost:8088
+    open http://localhost:8080
 else
-    echo "Could not detect browser opener. Please open manually: http://localhost:8088"
+    echo "Could not detect browser opener. Please open manually: http://localhost:8080"
 fi
 
 echo "Press Ctrl+C to stop port-forwarding and exit."

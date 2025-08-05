@@ -105,6 +105,7 @@ pipeline {
                 steps {
                     sh '''#!/bin/bash
                     kubectl get svc -n ingress-nginx
+                    kubectl apply -f k8s/ingress.yaml
                     '''
                 }
             }
