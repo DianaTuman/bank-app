@@ -134,9 +134,34 @@ Jenkins будет доступен по адресу: [http://localhost:8080](h
 ---
 
 ## Проверка успешного деплоя
+### 1. Добавьте записи в `/etc/hosts`
 
-Приложение будет доступен по адресу: [http://localhost:8088](http://localhost:8088)
+```bash
+sudo nano /etc/hosts
+```
 
+Добавьте:
+
+```text
+127.0.0.1 bank-ui.myapp.local
+```
+
+### 2. Отправьте запросы на `/actuator/health`
+
+```bash
+curl -s http://bank-ui.myapp.local/actuator/health
+```
+
+**Ожидаемый ответ:**
+
+```json
+{"status":"UP","groups":["liveness","readiness"]}
+```
+
+### 3. Можете открыть приложение в браузере
+
+Приложение будет доступно по адресу
+http://bank-ui.myapp.local/
 ---
 
 ## Завершение работы и очистка

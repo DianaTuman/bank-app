@@ -117,17 +117,8 @@ pipeline {
                     sh '''#!/bin/bash
                     set -e
 
-                    echo "Applying Ingress resource..."
-                    kubectl apply -f ./jenkins/ingress.yaml
-
-                    echo "Waiting for Ingress resource to be ready..."
-                    kubectl wait --namespace default \
-                      --for=condition=Available ingress/bank-ui-ingress \
-                      --timeout=60s || true
-
                     echo "Ingress status:"
                     kubectl get ingress -n default
-                    kubectl describe ingress bank-ui-ingress -n default
 
                     echo "Ingress Controller external IP:"
                     kubectl get svc ingress-nginx-controller -n ingress-nginx
