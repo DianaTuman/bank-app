@@ -43,8 +43,8 @@ pipeline {
                     echo "Waiting for Ingress NGINX pods to be ready..."
                     kubectl wait --namespace ingress-nginx \
                     --for=condition=Ready pods \
-                    --all \
-                    --timeout=300s
+                    --selector=app.kubernetes.io/component=controller \
+                    --timeout=120s
                     kubectl get pods -n ingress-nginx
                     kubectl get svc -n ingress-nginx
                     '''
