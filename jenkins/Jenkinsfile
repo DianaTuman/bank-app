@@ -29,10 +29,25 @@ pipeline {
                     sh """
                     helm repo add bitnami https://charts.bitnami.com/bitnami
                     helm repo update
+                    """
+                }
+            }
+
+            stage('Wait for Ingress Controller') {
+                steps {
+                    sh '''#!/bin/bash
+                    set -e
                     kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/cloud/deploy.yaml
                     kubectl get pods -n ingress-nginx
                     kubectl get svc -n ingress-nginx
-                    """
+                    echo "Waiting for Ingress NGINX pods to be ready..."
+                    kubectl wait --namespace ingress-nginx \
+                      --for=condition=Ready pods \
+                      --selector=app.kubernetes.io/component=controller \
+                      --timeout=120s
+                      kubectl get pods -n ingress-nginx
+                      kubectl get svc -n ingress-nginx
+                    '''
                 }
             }
 
