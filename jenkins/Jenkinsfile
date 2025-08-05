@@ -79,6 +79,14 @@ pipeline {
                     kubectl config view
                     echo "Installing Helm chart: bank-app..."
                     helm install bank-app ./bank-app
+                    '''
+                }
+            }
+
+            stage('Wait for bank-ui Pod to be Ready') {
+                steps {
+                    sh '''#!/bin/bash
+                    set -e
 
                     echo "Looking for a pod with name containing 'bank-ui'..."
                     BANK_UI_POD=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" | grep bank-ui | head -n 1)
@@ -91,9 +99,9 @@ pipeline {
                     echo "Found pod: $BANK_UI_POD"
                     echo "Waiting for pod $BANK_UI_POD to be Ready..."
 
-                    for i in {1..30}; do
+                    for ((i=1; i<=30; i++)); do
                       READY=$(kubectl get pod "$BANK_UI_POD" -o jsonpath="{.status.conditions[?(@.type=='Ready')].status}")
-                      if [ "$READY" = "True" ]; then
+                      if [ "$READY" == "True" ]; then
                         echo "Pod $BANK_UI_POD is Ready."
                         break
                       fi
@@ -105,10 +113,24 @@ pipeline {
                       echo "Pod $BANK_UI_POD did not become Ready in time."
                       exit 1
                     fi
+                    '''
+                }
+            }
+
+            stage('Port Forward and Open App') {
+                steps {
+                    sh '''#!/bin/bash
+                    set -e
 
                     echo "Forwarding port from pod to localhost:8088..."
-                    kubectl port-forward pod/"$BANK_UI_POD" 8088:8080 &
+                    kubectl port-forward pod/"$BANK_UI_POD" 8088:8080 > port-forward.log 2>&1 &
                     PORT_FORWARD_PID=$!
+
+                    # Kill port-forward on exit
+                    trap "echo Killing port-forward process...; kill $PORT_FORWARD_PID" EXIT
+
+                    echo "Waiting a few seconds for port-forward to initialize..."
+                    sleep 5
 
                     echo "Opening app in browser at http://localhost:8088..."
                     if command -v xdg-open > /dev/null; then
@@ -119,9 +141,11 @@ pipeline {
                         echo "Please open manually: http://localhost:8088"
                     fi
 
-                    echo "Press Ctrl+C to stop port-forwarding and exit."
+                    echo "Port-forward running in background (PID: $PORT_FORWARD_PID)"
+                    echo "Press Ctrl+C or terminate the build to stop it."
+
                     wait $PORT_FORWARD_PID
-                '''
+                    '''
                 }
             }
         }
