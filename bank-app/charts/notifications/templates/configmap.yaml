@@ -6,3 +6,4 @@ data:
   application.properties: |
     bank_ui_url={{ include "bank.bankUiURL" . }}
     spring.kafka.topics={{ include "bank.notifTopic" . }}
+    spring.kafka.bootstrap-servers=bank-app-bank-kafka:9092

@@ -41,3 +41,20 @@ bank-keycloak:
     - name: realm-config
       mountPath: /opt/bitnami/keycloak/data/import
       readOnly: true
+
+bank-kafka:
+  replicaCount: 2
+
+  auth:
+    enabled: false
+
+  zookeeper:
+    enabled: true
+    replicaCount: 1
+
+  externalAccess:
+    enabled: false
+
+  persistence:
+    enabled: true
+    size: 10Gi

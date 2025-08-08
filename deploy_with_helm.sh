@@ -3,8 +3,12 @@
 set -e  # Exit on any error
 set -o pipefail
 
-echo "Deleting Helm chart if it was installed before"
-helm delete bank-app
+if helm list --short | grep -q "^bank-app$"; then
+  echo "Deleting existing Helm release: bank-app"
+  helm delete bank-app
+else
+  echo "Helm release 'bank-app' not found; skipping delete."
+fi
 
 echo "Building Helm dependencies..."
 helm dependency build ./bank-app
@@ -30,7 +34,7 @@ for i in {1..30}; do
     break
   fi
   echo "Pod not ready yet... ($i/30)"
-  sleep 10
+  sleep 30
 done
 
 if [ "$READY" != "True" ]; then

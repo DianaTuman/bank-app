@@ -41,3 +41,7 @@ dependencies:
     version: 24.8.1
     repository: https://charts.bitnami.com/bitnami
     alias: bank-keycloak
+  - name: kafka
+    version: 32.3.11
+    repository: https://charts.bitnami.com/bitnami
+    alias: bank-kafka

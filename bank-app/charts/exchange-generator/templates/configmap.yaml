@@ -5,3 +5,4 @@ metadata:
 data:
   application.properties: |
     bank_app_rates_topic={{ include "bank.ratesTopic" . }}
+    spring.kafka.bootstrap-servers=bank-app-bank-kafka:9092

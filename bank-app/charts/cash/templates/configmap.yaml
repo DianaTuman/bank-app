@@ -7,3 +7,4 @@ data:
     accounts_service_url={{ include "bank.accountsServiceURL" . }}
     blocker_service_url={{ include "bank.blockerServiceURL" . }}
     bank_app_notifications_topic={{ include "bank.notifTopic" . }}
+    spring.kafka.bootstrap-servers=bank-app-bank-kafka:9092
