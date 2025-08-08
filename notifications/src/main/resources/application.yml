@@ -1,7 +1,3 @@
-logging:
-  level:
-    org.springframework.web.client.RestTemplate: DEBUG
-
 server:
   port: 8086
 
@@ -17,3 +13,12 @@ spring:
         enabled: true
       config:
         enabled: true
+
+  kafka:
+    topics: bank-app.notifications
+    bootstrap-servers: 'localhost:9092'
+    consumer:
+      group-id: bank-app
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.StringDeserializer

@@ -12,4 +12,14 @@ public class CashDTO {
     AccountDTO accountDTO;
 
     Float cashSum;
+
+    public String formMessage() {
+        if (cashSum > 0) {
+            return accountDTO.getAccountCurrency() + " account for user " + accountDTO.getUserLogin()
+                    + " received payment " + cashSum;
+        } else {
+            return accountDTO.getAccountCurrency() + " account for user " + accountDTO.getUserLogin()
+                    + " cashed  " + cashSum;
+        }
+    }
 }

@@ -25,10 +25,4 @@ public class ExchangeController {
         return exchangeService.getRates();
     }
 
-    @PostMapping("rates")
-    public void setRates(@RequestBody RatesDTO ratesDTO) {
-        exchangeService.setRates(ratesDTO);
-    }
-
-
 }

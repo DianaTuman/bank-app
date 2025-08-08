@@ -16,4 +16,11 @@ public class TransferDTO {
     Float amountFrom;
 
     Float amountTo;
+
+    public String formMessage() {
+        return "Money was transferred from user " + fromAccountDTO.getUserLogin() +
+                " account " + fromAccountDTO.getAccountCurrency() +
+                " to user " + toAccountDTO.getUserLogin() +
+                " account " + toAccountDTO.getAccountCurrency();
+    }
 }

@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: exchange-generator
+data:
+  application.properties: |
+    spring.kafka.topics={{ include "bank.ratesTopic" . }}

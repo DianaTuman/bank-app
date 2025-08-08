@@ -1,5 +1,5 @@
 server:
-  port: 8085
+  port: 8099
 
 spring:
   config:
@@ -12,4 +12,15 @@ spring:
       discovery:
         enabled: true
       config:
-        enabled: true
+        enabled: false
+
+  kafka:
+    bootstrap-servers: 'localhost:9092'
+    admin:
+      client-id: exchange-generator-service
+      fail-fast: true
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+bank_app_rates_topic: "bank-app.rates"

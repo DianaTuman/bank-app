@@ -17,3 +17,18 @@ spring:
         enabled: true
       config:
         enabled: true
+
+  kafka:
+    bootstrap-servers: 'localhost:9092'
+    producer:
+      acks: all
+      retries: 3
+      properties:
+        enable.idempotence: true
+    key-serializer: org.apache.kafka.common.serialization.StringSerializer
+    value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    admin:
+      client-id: transfer-service
+      fail-fast: true
+
+bank_app_notifications_topic: "bank-app.notifications"

@@ -6,4 +6,4 @@ data:
   application.properties: |
     accounts_service_url={{ include "bank.accountsServiceURL" . }}
     blocker_service_url={{ include "bank.blockerServiceURL" . }}
-    notification_service_url={{ include "bank.notificationsServiceURL" . }}
+    bank_app_notifications_topic={{ include "bank.notifTopic" . }}

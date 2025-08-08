@@ -2,12 +2,32 @@ server:
   port: 8084
 
 spring:
+  config:
+    import: "kubernetes:"
   application:
-    name: exchange-service
+  name: exchange-service
 
   cloud:
     kubernetes:
       discovery:
         enabled: true
       config:
+        enabled: true
+
+  kafka:
+    topics: bank-app.rates
+    bootstrap-servers: 'localhost:9092'
+    listener:
+      ack-mode: manual_immediate
+      retry:
         enabled: false
+    consumer:
+      max-poll-records: 1
+      group-id: bank-app-${random.uuid}
+      auto-offset-reset: latest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "com.dianatuman.practicum.exchange.dto"
+        spring.json.value.default.type: com.dianatuman.practicum.exchange.dto.RatesDTO
+        spring.json.use.type.headers: false

@@ -5,3 +5,4 @@ metadata:
 data:
   application.properties: |
     bank_ui_url={{ include "bank.bankUiURL" . }}
+    spring.kafka.topics={{ include "bank.notifTopic" . }}

@@ -33,3 +33,11 @@ http://{{ .Release.Name }}-bank-ui:8080
 {{- define "bank.gatewayApiURL" -}}
 http://{{ .Release.Name }}-gateway-api:8090
 {{- end }}
+
+{{- define "bank.ratesTopic" -}}
+bank-app.rates
+{{- end }}
+
+{{- define "bank.notifTopic" -}}
+bank-app.notifications
+{{- end }}
