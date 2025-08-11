@@ -43,18 +43,50 @@ bank-keycloak:
       readOnly: true
 
 bank-kafka:
-  replicaCount: 2
+  replicaCount: 3
+
+  kraft:
+    enabled: true
 
   auth:
     enabled: false
 
-  zookeeper:
-    enabled: true
-    replicaCount: 1
+  listeners:
+    client:
+      protocol: 'PLAINTEXT'
+    controller:
+      protocol: 'PLAINTEXT'
 
   externalAccess:
     enabled: false
 
   persistence:
+    enabled: false
+
+  provisioning:
     enabled: true
-    size: 10Gi
+    topics:
+      - name: bank-app.rates
+        partitions: 1
+        replicationFactor: 3
+      - name: bank-app.notifications
+        partitions: 1
+        replicationFactor: 3
+
+  controller:
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: 200m
+        memory: 512Mi
+
+  broker:
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: 200m
+        memory: 512Mi
