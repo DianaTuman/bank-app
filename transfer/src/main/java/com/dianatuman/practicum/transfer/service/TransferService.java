@@ -11,7 +11,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -22,7 +21,7 @@ import java.util.Objects;
 public class TransferService {
 
     private final RestTemplate restTemplate;
-    private final ProducerFactory<String, String> producerFactory;
+    private final KafkaTemplate<String, String> kafkaTemplate;
 
     @Value("${accounts_service_url}")
     private String accountsServiceURL;
@@ -34,9 +33,9 @@ public class TransferService {
     private String notificationsTopic;
 
 
-    public TransferService(RestTemplate restTemplate, ProducerFactory<String, String> producerFactory) {
+    public TransferService(RestTemplate restTemplate, KafkaTemplate<String, String> kafkaTemplate) {
         this.restTemplate = restTemplate;
-        this.producerFactory = producerFactory;
+        this.kafkaTemplate = kafkaTemplate;
     }
 
     public String transferAccount(TransferDTO transferDTO) throws JsonProcessingException {
@@ -66,7 +65,6 @@ public class TransferService {
                 String s = restTemplate.postForObject(accountsServiceURL + "/accounts/transfer",
                         new HttpEntity<>(jsonTransferDTO, httpHeaders), String.class);
                 if (Objects.equals(s, "OK")) {
-                    KafkaTemplate<String, String> kafkaTemplate = new KafkaTemplate<>(producerFactory);
                     kafkaTemplate.send(notificationsTopic, transferDTO.formMessage()).whenComplete((result, e) -> {
                         if (e != null) {
                             log.error("Ошибка при отправке сообщения: {}", e.getMessage(), e);

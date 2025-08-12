@@ -10,7 +10,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -21,7 +20,7 @@ import java.util.Objects;
 public class CashService {
 
     private final RestTemplate restTemplate;
-    private final ProducerFactory<String, String> producerFactory;
+    private final KafkaTemplate<String, String> kafkaTemplate;
 
     @Value("${accounts_service_url}")
     private String accountsServiceURL;
@@ -30,9 +29,9 @@ public class CashService {
     @Value("${bank_app_notifications_topic}")
     private String notificationsTopic;
 
-    public CashService(RestTemplate restTemplate, ProducerFactory<String, String> producerFactory) {
+    public CashService(RestTemplate restTemplate, KafkaTemplate<String, String> kafkaTemplate) {
         this.restTemplate = restTemplate;
-        this.producerFactory = producerFactory;
+        this.kafkaTemplate = kafkaTemplate;
     }
 
     public String cashAccount(CashDTO cashDTO) throws JsonProcessingException {
@@ -52,7 +51,6 @@ public class CashService {
                 String s = restTemplate.postForObject(accountsServiceURL + "/accounts/cash",
                         new HttpEntity<>(jsonCashDTO, httpHeaders), String.class);
                 if (Objects.equals(s, "OK")) {
-                    KafkaTemplate<String, String> kafkaTemplate = new KafkaTemplate<>(producerFactory);
                     kafkaTemplate.send(notificationsTopic, cashDTO.formMessage()).whenComplete((result, e) -> {
                         if (e != null) {
                             log.error("Ошибка при отправке сообщения: {}", e.getMessage(), e);

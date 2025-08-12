@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -20,13 +19,13 @@ import java.util.concurrent.ExecutionException;
 @Service
 public class ExchangeGeneratorService {
 
-    private final ProducerFactory<String, RatesDTO> producerFactory;
+    private final KafkaTemplate<String, RatesDTO> kafkaTemplate;
 
     @Value("${bank_app_rates_topic}")
     private String ratesTopic;
 
-    public ExchangeGeneratorService(ProducerFactory<String, RatesDTO> producerFactory) {
-        this.producerFactory = producerFactory;
+    public ExchangeGeneratorService(KafkaTemplate<String, RatesDTO> kafkaTemplate) {
+        this.kafkaTemplate = kafkaTemplate;
     }
 
     @Scheduled(cron = "* * * * * *")
@@ -37,7 +36,6 @@ public class ExchangeGeneratorService {
         currencyDTOS.add(new CurrencyDTO(BankCurrency.USD, rand.nextFloat(0.01F, 0.02F)));
         currencyDTOS.add(new CurrencyDTO(BankCurrency.CNY, rand.nextFloat(0.08F, 0.1F)));
 
-        KafkaTemplate<String, RatesDTO> kafkaTemplate = new KafkaTemplate<>(producerFactory);
         kafkaTemplate.send(ratesTopic, new RatesDTO(currencyDTOS))
                 .whenComplete((result, e) -> {
                     if (e != null) {
