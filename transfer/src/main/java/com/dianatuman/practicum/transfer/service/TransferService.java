@@ -43,25 +43,28 @@ public class TransferService {
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
         ObjectMapper mapper = new ObjectMapper();
 
+        log.debug("{}/block", blockerServiceURL);
         boolean isBlocked = Boolean.TRUE.equals(restTemplate
                 .postForObject(blockerServiceURL + "/block", Math.abs(transferDTO.getAmountFrom()), Boolean.class));
         if (isBlocked) {
+            log.warn("Operation was blocked as suspicious");
             return "Operation was blocked as suspicious.";
         } else {
             CurrencyTransferDTO currencyTransferDTO = new CurrencyTransferDTO(transferDTO);
             var jsonCurrencyTransferDTO = mapper.writeValueAsString(currencyTransferDTO);
             Float amountTo;
             try {
-                log.info(exchangeServiceURL + "/exchange");
+                log.debug("{}/exchange", exchangeServiceURL);
                 amountTo = restTemplate.postForObject(exchangeServiceURL + "/exchange",
                         new HttpEntity<>(jsonCurrencyTransferDTO, httpHeaders), Float.class);
             } catch (Throwable e) {
+                log.error(e.getMessage());
                 return "Exchange service is not working. Please try later.";
             }
             transferDTO.setAmountTo(amountTo);
             var jsonTransferDTO = mapper.writeValueAsString(transferDTO);
             try {
-                log.info(accountsServiceURL + "/accounts/transfer");
+                log.debug("{}/accounts/transfer", accountsServiceURL);
                 String s = restTemplate.postForObject(accountsServiceURL + "/accounts/transfer",
                         new HttpEntity<>(jsonTransferDTO, httpHeaders), String.class);
                 if (Objects.equals(s, "OK")) {
@@ -78,6 +81,7 @@ public class TransferService {
                 }
                 return s;
             } catch (Throwable e) {
+                log.error(e.getMessage());
                 return "Account service is not working. Please try later.";
             }
         }

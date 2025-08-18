@@ -39,15 +39,16 @@ public class CashService {
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
         ObjectMapper mapper = new ObjectMapper();
 
-        log.info(blockerServiceURL + "/block");
+        log.debug("{}/block", blockerServiceURL);
         var isBlocked = Boolean.TRUE.equals(restTemplate.postForObject(blockerServiceURL + "/block",
                 Math.abs(cashDTO.getCashSum()), Boolean.class));
         if (isBlocked) {
+            log.warn("Operation was blocked as suspicious");
             return "Operation was blocked as suspicious.";
         } else {
             var jsonCashDTO = mapper.writeValueAsString(cashDTO);
             try {
-                log.info(accountsServiceURL + "/accounts/cash");
+                log.debug("{}/accounts/cash", accountsServiceURL);
                 String s = restTemplate.postForObject(accountsServiceURL + "/accounts/cash",
                         new HttpEntity<>(jsonCashDTO, httpHeaders), String.class);
                 if (Objects.equals(s, "OK")) {
@@ -64,6 +65,7 @@ public class CashService {
                 }
                 return s;
             } catch (Throwable e) {
+                log.error(e.getMessage());
                 return "Account service is not working. Please try later.";
             }
         }

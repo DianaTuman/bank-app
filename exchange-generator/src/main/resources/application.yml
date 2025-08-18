@@ -23,6 +23,8 @@ spring:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 
+bank_app_rates_topic: "bank-app.rates"
+
 management:
   zipkin:
     tracing:
@@ -30,5 +32,7 @@ management:
   tracing:
     sampling:
       probability: 1
-
-bank_app_rates_topic: "bank-app.rates"
+  endpoints:
+    web:
+      exposure:
+        include: metrics, prometheus

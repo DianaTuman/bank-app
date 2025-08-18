@@ -1,6 +1,5 @@
 package com.dianatuman.practicum.notifications.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -21,8 +20,9 @@ public class NotificationsService {
     }
 
     @KafkaListener(topics = "${spring.kafka.topics}")
-    public void listen(String data) throws JsonProcessingException {
+    public void listen(String data) {
         log.info("Получены данные из топика: {}", data);
+        log.debug("{}/api/notification", bankUIURL);
         restTemplate.postForObject(bankUIURL + "/api/notification", data, String.class);
     }
 }

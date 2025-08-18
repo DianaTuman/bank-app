@@ -44,6 +44,7 @@ public class AccountsService implements UserDetailsService {
                 .getForObject("/accounts/users/" + username, UserPasswordDTO.class);
         String username1 = userPasswordDTO.getUsername();
         if (username1 == null || username1.isEmpty()) {
+            log.error("User with login {} wasn't found", username);
             throw new UsernameNotFoundException("User with login " + username + " wasn't found.");
         } else {
             return userPasswordDTO;
@@ -51,6 +52,7 @@ public class AccountsService implements UserDetailsService {
     }
 
     public List<UserDTO> getAllUsers() {
+        log.info("Get all users");
         return restTemplate.getForObject("/accounts/users", UsersListDTO.class).getUserDTOS();
     }
 
@@ -64,6 +66,7 @@ public class AccountsService implements UserDetailsService {
             restTemplate.postForEntity("/accounts/users",
                     new HttpEntity<>(jsonUserDTO, httpHeaders), String.class);
         } catch (HttpServerErrorException errorException) {
+            log.error(errorException.getMessage());
             result = "User with this login already exists!";
         } catch (Throwable e) {
             log.error(e.getMessage());
@@ -73,6 +76,7 @@ public class AccountsService implements UserDetailsService {
     }
 
     public UserDTO getUserByLogin(String login) {
+        log.info("Get user by login {}", login);
         return restTemplate.getForObject("/accounts/users/" + login + "/info", UserDTO.class);
     }
 

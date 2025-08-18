@@ -33,6 +33,7 @@ subprojects {
         implementation 'org.springframework.cloud:spring-cloud-starter-kubernetes-fabric8:3.3.0'
         implementation 'org.springframework.cloud:spring-cloud-starter-kubernetes-fabric8-config:3.3.0'
         implementation 'org.springframework.boot:spring-boot-starter-actuator'
+        implementation 'io.micrometer:micrometer-registry-prometheus:1.16.0-M2'
         implementation 'io.micrometer:micrometer-tracing-bridge-brave:1.6.0-M2'
         implementation 'io.zipkin.reporter2:zipkin-reporter-brave:3.5.1'
         implementation 'io.zipkin.brave:brave-instrumentation-spring-web:5.13.8'
