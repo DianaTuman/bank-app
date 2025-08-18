@@ -45,3 +45,7 @@ dependencies:
     version: 32.3.11
     repository: https://charts.bitnami.com/bitnami
     alias: bank-kafka
+  - name: zipkin
+    version: 1.3.11
+    repository: https://charts.bitnami.com/bitnami
+    alias: bank-zipkin

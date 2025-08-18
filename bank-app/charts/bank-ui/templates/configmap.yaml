@@ -9,3 +9,4 @@ data:
     spring.security.oauth2.client.provider.keycloak.jwk-set-uri=http://bank-app-bank-keycloak/realms/master/protocol/openid-connect/certs
     spring.security.oauth2.client.provider.keycloak.user-info-uri=http://bank-app-bank-keycloak/realms/master/protocol/openid-connect/userinfo
     spring.security.oauth2.client.provider.keycloak.authorization-uri=http://bank-app-bank-keycloak/realms/master/protocol/openid-connect/auth
+    management.zipkin.tracing.endpoint=http://bank-app-bank-zipkin:9411/api/v2/spans

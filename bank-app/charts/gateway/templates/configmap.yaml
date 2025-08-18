@@ -9,3 +9,4 @@ data:
     transfer_service_url={{ include "bank.transferServiceURL" . }}
     exchange_service_url={{ include "bank.exchangeServiceURL" . }}
     spring.security.oauth2.resourceserver.jwt.issuer-uri=http://bank-app-bank-keycloak/realms/master
+    management.zipkin.tracing.endpoint=http://bank-app-bank-zipkin:9411/api/v2/spans

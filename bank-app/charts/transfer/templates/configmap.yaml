@@ -9,3 +9,4 @@ data:
     exchange_service_url={{ include "bank.exchangeServiceURL" . }}
     bank_app_notifications_topic={{ include "bank.notifTopic" . }}
     spring.kafka.bootstrap-servers=bank-app-bank-kafka:9092
+    management.zipkin.tracing.endpoint=http://bank-app-bank-zipkin:9411/api/v2/spans

@@ -31,3 +31,11 @@ spring:
         spring.json.trusted.packages: "com.dianatuman.practicum.exchange.dto"
         spring.json.value.default.type: com.dianatuman.practicum.exchange.dto.RatesDTO
         spring.json.use.type.headers: false
+
+management:
+  zipkin:
+    tracing:
+      endpoint:  http://127.0.0.1:9411/api/v2/spans
+  tracing:
+    sampling:
+      probability: 1

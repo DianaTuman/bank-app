@@ -6,3 +6,4 @@ data:
   application.properties: |
     spring.kafka.topics={{ include "bank.ratesTopic" . }}
     spring.kafka.bootstrap-servers=bank-app-bank-kafka:9092
+    management.zipkin.tracing.endpoint=http://bank-app-bank-zipkin:9411/api/v2/spans

@@ -32,3 +32,11 @@ spring:
       fail-fast: true
 
 bank_app_notifications_topic: "bank-app.notifications"
+
+management:
+  zipkin:
+    tracing:
+      endpoint:  http://127.0.0.1:9411/api/v2/spans
+  tracing:
+    sampling:
+      probability: 1
