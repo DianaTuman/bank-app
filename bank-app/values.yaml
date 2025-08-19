@@ -1,8 +1,7 @@
 global:
   domain: myapp.local # Example domain for ingress
 
-##########################################################################################
-
+############################################# POSTGRES #############################################
 accounts-db:
   enabled: true
   auth:
@@ -14,7 +13,7 @@ accounts-db:
       enabled: true
       size: 1Gi
 
-##########################################################################################
+############################################# KEYCLOAK #############################################
 
 bank-keycloak:
   auth:
@@ -46,7 +45,7 @@ bank-keycloak:
       mountPath: /opt/bitnami/keycloak/data/import
       readOnly: true
 
-##########################################################################################
+############################################# KAFKA #############################################
 
 bank-kafka:
   replicaCount: 3
@@ -100,7 +99,7 @@ bank-kafka:
         cpu: 200m
         memory: 512Mi
 
-##########################################################################################
+############################################# ZIPKIN #############################################
 
 bank-zipkin:
   enabled: true
@@ -128,4 +127,73 @@ bank-zipkin:
       cpu: 250m
       memory: 256Mi
 
-##########################################################################################
+############################################# ELK #############################################
+
+#bank-elasticsearch:
+#  tls:
+#    enabled: false
+#  security:
+#    enabled: false
+#  replicas: 1
+#  minimumMasterNodes: 1
+#  resources:
+#    requests:
+#      cpu: "100m"
+#      memory: "1Gi"
+#    limits:
+#      memory: "2Gi"
+#  volumeClaimTemplate:
+#    accessModes: [ "ReadWriteOnce" ]
+#    resources:
+#      requests:
+#        storage: 5Gi
+
+#bank-kibana:
+#  kibanaHelmScripts:
+#    preInstallScript: ""
+#  service:
+#    type: NodePort
+#    nodePort: 32000
+#  hooks:
+#    enabled: false
+#  elasticsearch:
+#    scheme: http
+#    hosts: "http://bank-app-bank-elasticsearch:9200"
+#  extraEnvs:
+#    - name: ELASTICSEARCH_USERNAME
+#      value: elastic
+#    - name: ELASTICSEARCH_PASSWORD
+#      value: changeme
+
+bank-logstash:
+  replicaCount: 1
+  logstashPipeline:
+    logstash.conf: |
+      input {
+         kafka {
+          bootstrap_servers => "bank-app-bank-kafka:9092"
+          topics => ["bank-app.logs"]
+          group_id => "bank-app"
+          decorate_events => extended
+        }
+      }
+      filter {
+         mutate {
+            copy => { "[@metadata][kafka][timestamp]" => "kafka_timestamp"
+                      "[@metadata][kafka][partition]" => "partition" }
+        }
+      }
+      output {
+        stdout { codec => rubydebug }
+        if [log-level] == "INFO" {
+          file {
+            path => "/var/data/yandex-logs/output/coffee-processed.txt"
+          }
+        } else if [log-level] == "DEBUG" {
+          file {
+            path => "/var/data/yandex-logs/output/coffee-errors.txt"
+          }
+        }
+      }
+  service:
+    type: ClusterIP
