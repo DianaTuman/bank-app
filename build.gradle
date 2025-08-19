@@ -23,6 +23,9 @@ subprojects {
         compileOnly {
             extendsFrom annotationProcessor
         }
+        all {
+            exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+        }
     }
 
     repositories {
@@ -32,13 +35,26 @@ subprojects {
     dependencies {
         implementation 'org.springframework.cloud:spring-cloud-starter-kubernetes-fabric8:3.3.0'
         implementation 'org.springframework.cloud:spring-cloud-starter-kubernetes-fabric8-config:3.3.0'
-        implementation 'org.springframework.boot:spring-boot-starter-actuator'
+        implementation("org.springframework.boot:spring-boot-starter-actuator") {
+            exclude group: "org.springframework.boot", module: "spring-boot-starter-logging"
+        }
+
+        // Log4j2
+        implementation 'org.slf4j:slf4j-api:2.0.17'
+        implementation 'org.apache.logging.log4j:log4j-slf4j2-impl:2.25.1'
+        implementation'org.apache.kafka:kafka-clients:4.0.0'
+
+        // Metrics
         implementation 'io.micrometer:micrometer-registry-prometheus:1.16.0-M2'
         implementation 'io.micrometer:micrometer-tracing-bridge-brave:1.6.0-M2'
         implementation 'io.zipkin.reporter2:zipkin-reporter-brave:3.5.1'
         implementation 'io.zipkin.brave:brave-instrumentation-spring-web:5.13.8'
+
+        // Lombok
         compileOnly 'org.projectlombok:lombok'
         annotationProcessor 'org.projectlombok:lombok'
+
+        // Test
         testImplementation 'org.springframework.boot:spring-boot-starter-test'
         testImplementation 'org.springframework.boot:spring-boot-testcontainers'
         testImplementation 'org.testcontainers:junit-jupiter'

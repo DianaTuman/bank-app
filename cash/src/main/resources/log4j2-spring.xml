@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level [%t] %c{1} - %msg%n"/>
+        </Console>
+        <Kafka name="Kafka" topic="bank-app.logs" syncSend="false">
+            <PatternLayout pattern="%d{ISO8601} %-5level [%t] %c{1} - %msg%n"/>
+            <Property name="bootstrap.servers">bank-app-bank-kafka:9092</Property>
+        </Kafka>
+    </Appenders>
+
+    <Loggers>
+        <Root level="DEBUG">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="Kafka"/>
+        </Root>
+        <Logger name="org.apache.kafka" level="INFO">
+            <AppenderRef ref="Console"/>
+        </Logger>
+    </Loggers>
+</Configuration>

@@ -78,6 +78,9 @@ bank-kafka:
       - name: bank-app.notifications
         partitions: 1
         replicationFactor: 3
+      - name: bank-app.logs
+        partitions: 1
+        replicationFactor: 3
 
   controller:
     resources:
