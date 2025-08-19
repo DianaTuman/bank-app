@@ -129,48 +129,36 @@ bank-zipkin:
 
 ############################################# ELK #############################################
 
-#bank-elasticsearch:
-#  tls:
-#    enabled: false
-#  security:
-#    enabled: false
-#  replicas: 1
-#  minimumMasterNodes: 1
-#  resources:
-#    requests:
-#      cpu: "100m"
-#      memory: "1Gi"
-#    limits:
-#      memory: "2Gi"
-#  volumeClaimTemplate:
-#    accessModes: [ "ReadWriteOnce" ]
-#    resources:
-#      requests:
-#        storage: 5Gi
-
-#bank-kibana:
-#  kibanaHelmScripts:
-#    preInstallScript: ""
-#  service:
-#    type: NodePort
-#    nodePort: 32000
-#  hooks:
-#    enabled: false
-#  elasticsearch:
-#    scheme: http
-#    hosts: "http://bank-app-bank-elasticsearch:9200"
-#  extraEnvs:
-#    - name: ELASTICSEARCH_USERNAME
-#      value: elastic
-#    - name: ELASTICSEARCH_PASSWORD
-#      value: changeme
+bank-elasticsearch:
+  replicas: 1
+  minimumMasterNodes: 1
+  security:
+    enabled: true
+  tls:
+    enabled: false
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "1Gi"
+    limits:
+      memory: "2Gi"
+  volumeClaimTemplate:
+    accessModes: [ "ReadWriteOnce" ]
+    resources:
+      requests:
+        storage: 5Gi
+  nodeGroup: "master"
+  config:
+    node.store.allow_mmap: false
+    network.host: 0.0.0.0
+    discovery.type: single-node
 
 bank-logstash:
   replicaCount: 1
   logstashPipeline:
     logstash.conf: |
       input {
-         kafka {
+        kafka {
           bootstrap_servers => "bank-app-bank-kafka:9092"
           topics => ["bank-app.logs"]
           group_id => "bank-app"
@@ -178,22 +166,105 @@ bank-logstash:
         }
       }
       filter {
-         mutate {
-            copy => { "[@metadata][kafka][timestamp]" => "kafka_timestamp"
-                      "[@metadata][kafka][partition]" => "partition" }
+        mutate {
+          copy => { "[@metadata][kafka][timestamp]" => "kafka_timestamp"
+                    "[@metadata][kafka][partition]" => "partition" }
         }
       }
       output {
         stdout { codec => rubydebug }
-        if [log-level] == "INFO" {
-          file {
-            path => "/var/data/yandex-logs/output/coffee-processed.txt"
-          }
-        } else if [log-level] == "DEBUG" {
-          file {
-            path => "/var/data/yandex-logs/output/coffee-errors.txt"
-          }
+        elasticsearch {
+          hosts => ["https://elasticsearch-master:9200"]
+          user => "${ELASTICSEARCH_USERNAME}"
+          password => "${ELASTICSEARCH_PASSWORD}"
+          cacert => "/usr/share/logstash/config/certs/ca.crt"
+          index => "logs-bank-app"
+          ssl => true
         }
       }
+
   service:
     type: ClusterIP
+    ports:
+      - name: beats
+        port: 5044
+        targetPort: 5044
+      - name: http
+        port: 9600
+        targetPort: 9600
+
+  extraEnvs:
+    - name: ELASTICSEARCH_HOSTS
+      value: "https://elasticsearch-master:9200"
+    - name: ELASTICSEARCH_USERNAME
+      valueFrom:
+        secretKeyRef:
+          name: elasticsearch-master-credentials
+          key: username
+    - name: ELASTICSEARCH_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: elasticsearch-master-credentials
+          key: password
+
+  extraVolumes:
+    - name: es-certs
+      secret:
+        secretName: elasticsearch-master-certs
+
+  extraVolumeMounts:
+    - name: es-certs
+      mountPath: /usr/share/logstash/config/certs
+      readOnly: true
+
+#bank-kibana:
+#  replicaCount: 1
+#
+#  kibanaConfig:
+#    kibana.yml: |
+#      server.name: "bank-kibana"
+#      server.host: "0.0.0.0"
+#      elasticsearch.hosts: ["https://elasticsearch-master:9200"]
+#      elasticsearch.username: "${ELASTICSEARCH_USERNAME}"
+#      elasticsearch.password: "${ELASTICSEARCH_PASSWORD}"
+#      elasticsearch.ssl.certificateAuthorities: ["/usr/share/kibana/config/certs/ca.crt"]
+#      elasticsearch.ssl.verificationMode: full
+#      monitoring.enabled: true
+#      logging.dest: /usr/share/kibana/logs/kibana.log
+#
+#  service:
+#    type: ClusterIP
+#    ports:
+#      - name: http
+#        port: 5601
+#        targetPort: 5601
+#
+#  extraEnvs:
+#    - name: ELASTICSEARCH_USERNAME
+#      valueFrom:
+#        secretKeyRef:
+#          name: elasticsearch-master-credentials
+#          key: username
+#    - name: ELASTICSEARCH_PASSWORD
+#      valueFrom:
+#        secretKeyRef:
+#          name: elasticsearch-master-credentials
+#          key: password
+#
+#  extraVolumes:
+#    - name: es-certs
+#      secret:
+#        secretName: elasticsearch-master-certs
+#
+#  extraVolumeMounts:
+#    - name: es-certs
+#      mountPath: /usr/share/kibana/config/certs
+#      readOnly: true
+#
+#  resources:
+#    requests:
+#      cpu: "500m"
+#      memory: "1Gi"
+#    limits:
+#      cpu: "1"
+#      memory: "2Gi"

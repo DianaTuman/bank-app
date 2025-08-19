@@ -14,7 +14,7 @@ echo "Building Helm dependencies..."
 helm dependency build ./bank-app
 
 echo "Installing Helm chart: bank-app..."
-helm install bank-app ./bank-app
+helm install bank-app ./bank-app --timeout 5m
 
 echo "Looking for a pod with name containing 'bank-ui'..."
 BANK_UI_POD=$(kubectl get pods --no-headers -o custom-columns=":metadata.name" | grep bank-ui | head -n 1)
