@@ -3,6 +3,8 @@
 set -e  # Exit on any error
 set -o pipefail
 
+[ -f ./bank-app/Chart.lock ] && rm ./bank-app/Chart.lock
+
 if helm list --short | grep -q "^bank-app$"; then
   echo "Deleting existing Helm release: bank-app"
   helm delete bank-app

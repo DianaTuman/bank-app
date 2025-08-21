@@ -4,6 +4,7 @@ import com.dianatuman.practicum.transfer.dto.CurrencyTransferDTO;
 import com.dianatuman.practicum.transfer.dto.TransferDTO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.micrometer.core.instrument.MeterRegistry;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,6 +23,7 @@ public class TransferService {
 
     private final RestTemplate restTemplate;
     private final KafkaTemplate<String, String> kafkaTemplate;
+    private final MeterRegistry meterRegistry;
 
     @Value("${accounts_service_url}")
     private String accountsServiceURL;
@@ -33,9 +35,10 @@ public class TransferService {
     private String notificationsTopic;
 
 
-    public TransferService(RestTemplate restTemplate, KafkaTemplate<String, String> kafkaTemplate) {
+    public TransferService(RestTemplate restTemplate, KafkaTemplate<String, String> kafkaTemplate, MeterRegistry meterRegistry) {
         this.restTemplate = restTemplate;
         this.kafkaTemplate = kafkaTemplate;
+        this.meterRegistry = meterRegistry;
     }
 
     public String transferAccount(TransferDTO transferDTO) throws JsonProcessingException {
@@ -48,6 +51,12 @@ public class TransferService {
                 .postForObject(blockerServiceURL + "/block", Math.abs(transferDTO.getAmountFrom()), Boolean.class));
         if (isBlocked) {
             log.warn("Operation was blocked as suspicious");
+            meterRegistry.counter("blocked_transfer_operations",
+                    "from_login", transferDTO.getFromAccountDTO().getUserLogin(),
+                    "from_account_currency", transferDTO.getFromAccountDTO().getAccountCurrency(),
+                    "to_login", transferDTO.getToAccountDTO().getUserLogin(),
+                    "to_account_currency", transferDTO.getToAccountDTO().getAccountCurrency()
+            ).increment();
             return "Operation was blocked as suspicious.";
         } else {
             CurrencyTransferDTO currencyTransferDTO = new CurrencyTransferDTO(transferDTO);

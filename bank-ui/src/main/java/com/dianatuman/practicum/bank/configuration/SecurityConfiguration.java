@@ -2,6 +2,7 @@ package com.dianatuman.practicum.bank.configuration;
 
 import com.dianatuman.practicum.bank.dto.UserPasswordDTO;
 import com.dianatuman.practicum.bank.service.AccountsService;
+import io.micrometer.core.instrument.MeterRegistry;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -22,8 +23,14 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfiguration {
 
+    private final MeterRegistry meterRegistry;
+
     @Autowired
     private AccountsService accountsService;
+
+    public SecurityConfiguration(MeterRegistry meterRegistry) {
+        this.meterRegistry = meterRegistry;
+    }
 
     @Bean
     PasswordEncoder passwordEncoder() {
@@ -62,6 +69,9 @@ public class SecurityConfiguration {
                         user.getAuthorities()
                 );
             } else {
+                meterRegistry.counter("failed_login_attempt",
+                                "login", username)
+                        .increment();
                 throw new BadCredentialsException("Invalid username or password");
             }
         };

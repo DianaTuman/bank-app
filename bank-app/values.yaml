@@ -2,6 +2,7 @@ global:
   domain: myapp.local # Example domain for ingress
 
 ############################################# POSTGRES #############################################
+
 accounts-db:
   enabled: true
   auth:
@@ -217,54 +218,98 @@ bank-logstash:
       mountPath: /usr/share/logstash/config/certs
       readOnly: true
 
-#bank-kibana:
-#  replicaCount: 1
+############################################# Prometheus #############################################
+
+bank-prometheus:
+  prometheus-node-exporter:
+    enabled: false
+  kube-state-metrics:
+    enabled: false
+  prometheus-pushgateway:
+    enabled: false
+  alertmanager:
+    enabled: false
+  persistentVolume:
+    enabled: false
+  server:
+    persistentVolume:
+      enabled: false
+
+  serverFiles:
+    prometheus.yml:
+      scrape_configs:
+        - job_name: 'accounts-service'
+          metrics_path: '/actuator/prometheus'
+          static_configs:
+            - targets: [ 'bank-app-accounts-service:8081' ]
+
+        - job_name: 'bank-ui'
+          metrics_path: '/actuator/prometheus'
+          static_configs:
+            - targets: [ 'bank-app-bank-ui:8080' ]
+
+        - job_name: 'blocker-service'
+          metrics_path: '/actuator/prometheus'
+          static_configs:
+            - targets: [ 'bank-app-blocker-service:8082' ]
+
+        - job_name: 'cash-service'
+          metrics_path: '/actuator/prometheus'
+          static_configs:
+            - targets: [ 'bank-app-cash-service:8083' ]
+
+        - job_name: 'exchange-service'
+          metrics_path: '/actuator/prometheus'
+          static_configs:
+            - targets: [ 'bank-app-exchange-service:8084' ]
+
+        - job_name: 'exchange-generator-service'
+          metrics_path: '/actuator/prometheus'
+          static_configs:
+            - targets: [ 'bank-app-exchange-generator-service:8085' ]
+
+        - job_name: 'gateway-api'
+          metrics_path: '/actuator/prometheus'
+          static_configs:
+            - targets: [ 'bank-app-gateway-api:8090' ]
+
+        - job_name: 'notifications-service'
+          metrics_path: '/actuator/prometheus'
+          static_configs:
+            - targets: [ 'bank-app-notifications-service:8086' ]
+
+        - job_name: 'transfer-service'
+          metrics_path: '/actuator/prometheus'
+          static_configs:
+            - targets: [ 'bank-app-transfer-service:8087' ]
+
+############################################# Grafana #############################################
+
+#bank-grafana:
+#  enabled: true
 #
-#  kibanaConfig:
-#    kibana.yml: |
-#      server.name: "bank-kibana"
-#      server.host: "0.0.0.0"
-#      elasticsearch.hosts: ["https://elasticsearch-master:9200"]
-#      elasticsearch.username: "${ELASTICSEARCH_USERNAME}"
-#      elasticsearch.password: "${ELASTICSEARCH_PASSWORD}"
-#      elasticsearch.ssl.certificateAuthorities: ["/usr/share/kibana/config/certs/ca.crt"]
-#      elasticsearch.ssl.verificationMode: full
-#      monitoring.enabled: true
-#      logging.dest: /usr/share/kibana/logs/kibana.log
+#  adminUser: admin
+#  adminPassword: admin123
 #
 #  service:
 #    type: ClusterIP
-#    ports:
-#      - name: http
-#        port: 5601
-#        targetPort: 5601
+#    port: 80
 #
-#  extraEnvs:
-#    - name: ELASTICSEARCH_USERNAME
-#      valueFrom:
-#        secretKeyRef:
-#          name: elasticsearch-master-credentials
-#          key: username
-#    - name: ELASTICSEARCH_PASSWORD
-#      valueFrom:
-#        secretKeyRef:
-#          name: elasticsearch-master-credentials
-#          key: password
+#  persistence:
+#    enabled: false
 #
-#  extraVolumes:
-#    - name: es-certs
-#      secret:
-#        secretName: elasticsearch-master-certs
+#  sidecar:
+#    dashboards:
+#      enabled: true
+#    datasources:
+#      enabled: true
 #
-#  extraVolumeMounts:
-#    - name: es-certs
-#      mountPath: /usr/share/kibana/config/certs
-#      readOnly: true
-#
-#  resources:
-#    requests:
-#      cpu: "500m"
-#      memory: "1Gi"
-#    limits:
-#      cpu: "1"
-#      memory: "2Gi"
+#  datasources:
+#    datasources.yaml:
+#      apiVersion: 1
+#      datasources:
+#        - name: Prometheus
+#          type: prometheus
+#          access: proxy
+#          url: http://bank-app-bank-prometheus-server:80
+#          isDefault: true

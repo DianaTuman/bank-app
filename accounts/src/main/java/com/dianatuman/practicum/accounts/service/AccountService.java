@@ -7,6 +7,7 @@ import com.dianatuman.practicum.accounts.entity.Account;
 import com.dianatuman.practicum.accounts.entity.AccountId;
 import com.dianatuman.practicum.accounts.mapper.AccountMapper;
 import com.dianatuman.practicum.accounts.repository.AccountRepository;
+import io.micrometer.core.instrument.MeterRegistry;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -18,10 +19,12 @@ public class AccountService {
 
     private final AccountRepository accountRepository;
     private final AccountMapper accountMapper;
+    private final MeterRegistry meterRegistry;
 
-    public AccountService(AccountRepository accountRepository, AccountMapper accountMapper) {
+    public AccountService(AccountRepository accountRepository, AccountMapper accountMapper, MeterRegistry meterRegistry) {
         this.accountRepository = accountRepository;
         this.accountMapper = accountMapper;
+        this.meterRegistry = meterRegistry;
     }
 
     public String cashAccount(CashDTO cashDTO) {
@@ -35,6 +38,10 @@ public class AccountService {
                         account.getUserLogin(), account.getAccountCurrency(), cashDTO.getCashSum());
                 return "OK";
             } else {
+                meterRegistry.counter("failed_cash_operations",
+                                "login", cashDTO.getAccountDTO().getUserLogin(),
+                                "account_currency", cashDTO.getAccountDTO().getAccountCurrency())
+                        .increment();
                 log.error("Not enough money on {} user's account {} to cash {}",
                         account.getUserLogin(), account.getAccountCurrency(), cashDTO.getCashSum());
                 return "Not enough money on the account " + account.getAccountCurrency();
@@ -61,6 +68,12 @@ public class AccountService {
                         transferDTO.getAmountFrom(), transferDTO.getFromAccountDTO(), transferDTO.getToAccountDTO());
                 return "OK";
             } else {
+                meterRegistry.counter("failed_transfer_operations",
+                                "from_login", transferDTO.getFromAccountDTO().getUserLogin(),
+                                "from_account_currency", transferDTO.getFromAccountDTO().getAccountCurrency(),
+                                "to_login", transferDTO.getToAccountDTO().getUserLogin(),
+                                "to_account_currency", transferDTO.getToAccountDTO().getAccountCurrency())
+                        .increment();
                 log.error("Not enough money on {} user's account {} to transfer {}",
                         account1.getUserLogin(), account1.getAccountCurrency(), transferDTO.getAmountFrom());
                 return "Not enough money on the account " + account1.getAccountCurrency();

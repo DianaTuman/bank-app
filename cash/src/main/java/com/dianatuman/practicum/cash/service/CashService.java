@@ -3,6 +3,7 @@ package com.dianatuman.practicum.cash.service;
 import com.dianatuman.practicum.cash.dto.CashDTO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.micrometer.core.instrument.MeterRegistry;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,6 +22,7 @@ public class CashService {
 
     private final RestTemplate restTemplate;
     private final KafkaTemplate<String, String> kafkaTemplate;
+    private final MeterRegistry meterRegistry;
 
     @Value("${accounts_service_url}")
     private String accountsServiceURL;
@@ -29,9 +31,10 @@ public class CashService {
     @Value("${bank_app_notifications_topic}")
     private String notificationsTopic;
 
-    public CashService(RestTemplate restTemplate, KafkaTemplate<String, String> kafkaTemplate) {
+    public CashService(RestTemplate restTemplate, KafkaTemplate<String, String> kafkaTemplate, MeterRegistry meterRegistry) {
         this.restTemplate = restTemplate;
         this.kafkaTemplate = kafkaTemplate;
+        this.meterRegistry = meterRegistry;
     }
 
     public String cashAccount(CashDTO cashDTO) throws JsonProcessingException {
@@ -44,6 +47,10 @@ public class CashService {
                 Math.abs(cashDTO.getCashSum()), Boolean.class));
         if (isBlocked) {
             log.warn("Operation was blocked as suspicious");
+            meterRegistry.counter("blocked_cash_operations",
+                            "login", cashDTO.getAccountDTO().getUserLogin(),
+                            "account_currency", cashDTO.getAccountDTO().getAccountCurrency())
+                    .increment();
             return "Operation was blocked as suspicious.";
         } else {
             var jsonCashDTO = mapper.writeValueAsString(cashDTO);
