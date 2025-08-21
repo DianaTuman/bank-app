@@ -53,10 +53,10 @@ dependencies:
     version: 27.31.0
     repository: https://prometheus-community.github.io/helm-charts
     alias: bank-prometheus
-#  - name: grafana
-#    version: 9.3.2
-#    repository: https://grafana.github.io/helm-charts
-#    alias: bank-grafana
+  - name: grafana
+    version: 9.3.2
+    repository: https://grafana.github.io/helm-charts
+    alias: bank-grafana
   - name: elasticsearch
     version: 8.5.1
     repository: https://helm.elastic.co
