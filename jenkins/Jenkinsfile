@@ -75,7 +75,7 @@ pipeline {
 
                     kubectl config view
                     echo "Installing Helm chart: bank-app..."
-                    helm install bank-app ./bank-app
+                    helm install bank-app ./bank-app --timeout 10m
                     '''
                 }
             }
