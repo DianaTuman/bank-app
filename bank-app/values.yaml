@@ -340,8 +340,4 @@ bank-grafana:
 
   ingress:
     enabled: true
-    annotations:
-      kubernetes.io/ingress.class: nginx
-      nginx.ingress.kubernetes.io/rewrite-target: /
-    hosts:
-      - grafana.bank-app.local
+    hosts: ["grafana.bank-app.local"]
