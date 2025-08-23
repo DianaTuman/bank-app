@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-failed-logins
+  labels:
+    grafana_dashboard: "1"
+data:
+  failed-logins.json: |
+    {
+      "id": null,
+      "title": "Failed Login Attempts",
+      "tags": [],
+      "timezone": "browser",
+      "schemaVersion": 36,
+      "version": 1,
+      "panels": [
+        {
+          "type": "graph",
+          "title": "Failed Login Attempts Over Time",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus"
+              },
+              "disableTextWrap": false,
+              "editorMode": "builder",
+              "expr": "failed_login_attempt_total",
+              "fullMetaSearch": false,
+              "includeNullMetadata": true,
+              "legendFormat": "__auto",
+              "range": true,
+              "refId": "A",
+              "useBackend": false
+            }
+          ],
+          "gridPos": {
+            "x": 0,
+            "y": 0,
+            "w": 24,
+            "h": 8
+          }
+        }
+      ],
+      "refresh": "30s"
+    }

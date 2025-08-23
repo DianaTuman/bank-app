@@ -23,4 +23,7 @@ You must have working K8s and Helm. K8s should be able to work with Ingress and 
 
 The application will start at **localhost:8080**.
 
+Alerts for Prometheus are disabled. 
+To enable them you need to specify your mail credentials in [this file](./bank-app/values.yaml) in Prometheus section and uncomment code.
+
 ### **To deploy this application with Jenkins please read [README-JENKINS](./README-JENKINS.md)**

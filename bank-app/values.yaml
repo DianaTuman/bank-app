@@ -199,15 +199,48 @@ bank-prometheus:
     enabled: false
   prometheus-pushgateway:
     enabled: false
-  alertmanager:
-    enabled: false
   persistentVolume:
     enabled: false
   server:
     persistentVolume:
       enabled: false
 
+  alertmanager:
+    enabled: false #true
+#    config:
+#      global:
+#        resolve_timeout: 5m
+#        smtp_smarthost: 'smtp.gmail.com:587'     # SMTP server and port
+#        smtp_from: 'your-email@gmail.com'        # Sender email address
+#        smtp_auth_username: 'your-email@gmail.com' # SMTP username
+#        smtp_auth_password: 'your-app-password'    # SMTP password (or app password for Gmail)
+#        smtp_require_tls: true
+#      route:
+#        receiver: 'default'
+#        group_by: [ 'alertname' ]
+#        group_wait: 10s
+#        group_interval: 10s
+#        repeat_interval: 1h
+#      receivers:
+#        - name: 'email-alerts'
+#          email_configs:
+#            - to: 'yourmail@gmail.com'
+#              send_resolved: true
+
   serverFiles:
+#    rules:
+#      my_custom_alerts.yaml:
+#        groups:
+#          - name: failed-login-alerts
+#            rules:
+#              - alert: HighFailedLoginAttempts
+#                expr: increase(failed_login_attempt_total[5m]) > 2
+#                for: 2m
+#                labels:
+#                  severity: warning
+#                annotations:
+#                  summary: "High number of failed login attempts"
+#                  description: "More than 2 failed login attempts detected in the last 5 minutes on instance {{ $labels.instance }}."
     prometheus.yml:
       scrape_configs:
         - job_name: 'accounts-service'
@@ -273,6 +306,8 @@ bank-grafana:
   sidecar:
     dashboards:
       enabled: true
+      label: grafana_dashboard
+      folder: /var/lib/grafana/dashboards
     datasources:
       enabled: true
 
