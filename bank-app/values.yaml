@@ -340,4 +340,6 @@ bank-grafana:
 
   ingress:
     enabled: true
-    hosts: ["grafana.bank-app.local"]
+    hosts:
+      - "grafana.bank-app.local"
+    path: "/grafana"
