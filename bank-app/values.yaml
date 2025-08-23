@@ -130,12 +130,7 @@ bank-zipkin:
 
   ingress:
     enabled: true
-    annotations:
-      kubernetes.io/ingress.class: nginx
-      nginx.ingress.kubernetes.io/rewrite-target: /
-    hosts:
-      - zipkin.bank-app.local
-
+    hostname: zipkin.bank-app.local
 
 ############################################# ELK #############################################
 
@@ -201,11 +196,7 @@ bank-kibana:
 
   ingress:
     enabled: true
-    annotations:
-      kubernetes.io/ingress.class: nginx
-      nginx.ingress.kubernetes.io/rewrite-target: /
-    hosts:
-      - kibana.bank-app.local
+    hostname: kibana.bank-app.local
 
 ############################################# Prometheus #############################################
 
