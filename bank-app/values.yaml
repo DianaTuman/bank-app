@@ -337,9 +337,3 @@ bank-grafana:
           access: proxy
           url: http://bank-app-bank-prometheus-server:80
           isDefault: true
-
-  ingress:
-    enabled: true
-    hosts:
-      - "grafana.bank-app.local"
-    path: "/grafana"
