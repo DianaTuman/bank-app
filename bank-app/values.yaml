@@ -336,4 +336,3 @@ bank-grafana:
     ingressClassName: "nginx"
     hosts:
       - "grafana.bank-app.local"
-    path: "/grafana"
