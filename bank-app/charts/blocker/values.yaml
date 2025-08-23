@@ -29,7 +29,7 @@ ingress:
   className: "nginx"
   annotations: { }
   hosts:
-    - host: blocker-service.myapp.local
+    - host: blocker-service.bank-app.local
       paths:
         - path: /
           pathType: Prefix

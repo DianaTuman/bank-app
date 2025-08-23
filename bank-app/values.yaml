@@ -1,5 +1,5 @@
 global:
-  domain: myapp.local # Example domain for ingress
+  domain: bank-app.local # Example domain for ingress
 
 ############################################# POSTGRES #############################################
 
@@ -128,6 +128,18 @@ bank-zipkin:
       cpu: 250m
       memory: 256Mi
 
+  ingress:
+    enabled: true
+    annotations:
+      kubernetes.io/ingress.class: nginx
+      nginx.ingress.kubernetes.io/rewrite-target: /
+    hosts:
+      - host: zipkin.bank-app.local
+        paths:
+          - path: /
+            pathType: Prefix
+
+
 ############################################# ELK #############################################
 
 bank-elasticsearch:
@@ -189,6 +201,17 @@ bank-kibana:
     limits:
       memory: 1Gi
       cpu: 500m
+
+  ingress:
+    enabled: true
+    annotations:
+      kubernetes.io/ingress.class: nginx
+      nginx.ingress.kubernetes.io/rewrite-target: /
+    hosts:
+      - host: kibana.bank-app.local
+        paths:
+          - path: /
+            pathType: Prefix
 
 ############################################# Prometheus #############################################
 
@@ -320,3 +343,14 @@ bank-grafana:
           access: proxy
           url: http://bank-app-bank-prometheus-server:80
           isDefault: true
+
+  ingress:
+    enabled: true
+    annotations:
+      kubernetes.io/ingress.class: nginx
+      nginx.ingress.kubernetes.io/rewrite-target: /
+    hosts:
+      - host: grafana.bank-app.local
+        paths:
+          - path: /
+            pathType: Prefix

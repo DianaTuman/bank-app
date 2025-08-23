@@ -28,7 +28,7 @@ ingress:
   className: "nginx"
   annotations: { }
   hosts:
-    - host: transfer-service.myapp.local
+    - host: transfer-service.bank-app.local
       paths:
         - path: /
           pathType: Prefix

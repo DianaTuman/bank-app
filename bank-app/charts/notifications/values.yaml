@@ -29,7 +29,7 @@ ingress:
   className: "nginx"
   annotations: { }
   hosts:
-    - host: notifications-service.myapp.local
+    - host: notifications-service.bank-app.local
       paths:
         - path: /
           pathType: Prefix

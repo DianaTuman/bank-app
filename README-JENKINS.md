@@ -121,13 +121,16 @@ sudo nano /etc/hosts
 Добавьте:
 
 ```text
-127.0.0.1 bank-ui.myapp.local
+127.0.0.1 bank-ui.bank-app.local
+127.0.0.1 zipkin.bank-app.local
+127.0.0.1 grafana.bank-app.local
+127.0.0.1 kibana.bank-app.local
 ```
 
 ### 2. Отправьте запросы на `/actuator/health`
 
 ```bash
-curl -s http://bank-ui.myapp.local/actuator/health
+curl -s http://bank-ui.bank-app.local/actuator/health
 ```
 
 **Ожидаемый ответ:**
@@ -138,9 +141,12 @@ curl -s http://bank-ui.myapp.local/actuator/health
 
 ### 3. Можете открыть приложение в браузере
 
-Приложение будет доступно по адресу
-http://bank-ui.myapp.local/
+Приложение будет доступно по адресу: http://bank-ui.bank-app.local/
 ---
+
+Zipkin: http://zipkin.bank-app.local
+Grafana: http://grafana.bank-app.local
+Kibana: http://kibana.bank-app.local
 
 ## Завершение работы и очистка
 

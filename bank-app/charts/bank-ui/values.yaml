@@ -29,7 +29,7 @@ ingress:
   className: "nginx"
   annotations: { }
   hosts:
-    - host: bank-ui.myapp.local
+    - host: bank-ui.bank-app.local
       paths:
         - path: /
           pathType: Prefix

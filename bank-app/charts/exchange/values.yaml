@@ -30,7 +30,7 @@ ingress:
   className: "nginx"
   annotations: { }
   hosts:
-    - host: exchange-service.myapp.local
+    - host: exchange-service.bank-app.local
       paths:
         - path: /
           pathType: Prefix
